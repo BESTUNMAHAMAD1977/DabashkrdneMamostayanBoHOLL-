@@ -1072,7 +1072,7 @@ document.getElementById('themeBtn').onclick=()=>{
   localStorage.setItem('pwdark',dark?'1':'0')};
 if(localStorage.getItem('pwdark')==='1')document.documentElement.classList.add('dark');
 
-/* ================= دەنگ — چاککراو ================= */
+/* ================= دەنگ — دەنگی هەڵە یەک تۆنی کورت و نەرم ================= */
 let audioCtx=null;
 function getCtx(){
   if(!audioCtx){
@@ -1104,22 +1104,15 @@ function beep(ok){
       g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.4);
       o.start();o.stop(c.currentTime+.42);
     }else{
-      /* دەنگی هەڵە — سێ جار پەلپەلەی ڕوون بە فرێکوێنسی نزمتر لە ٣٠٠هرتز بۆ ڕوونی */
-      o.type='square';
+      /* دەنگی هەڵە — یەک تۆنی کورت و نەرم */
+      o.type='sine';
       const t=c.currentTime;
-      o.frequency.setValueAtTime(280,t);
-      g.gain.setValueAtTime(.25,t);
-      /* جیاکردنی سێ پەلپەلە بە بۆشایی کورت */
-      for(let i=0;i<3;i++){
-        const st=t+(i*.22);
-        g.gain.setValueAtTime(.25,st);
-        g.gain.setValueAtTime(.001,st+.12);
-        if(i<2)g.gain.setValueAtTime(.25,st+.2);
-      }
-      o.frequency.setValueAtTime(280,t);
-      o.frequency.setValueAtTime(220,t+.22);
-      o.frequency.setValueAtTime(180,t+.44);
-      o.start(t);o.stop(t+.75);
+      o.frequency.setValueAtTime(340,t);
+      o.frequency.exponentialRampToValueAtTime(240,t+.18);
+      g.gain.setValueAtTime(0,t);
+      g.gain.linearRampToValueAtTime(.16,t+.02);
+      g.gain.exponentialRampToValueAtTime(.001,t+.2);
+      o.start(t);o.stop(t+.22);
     }
   }catch(e){}
 }

@@ -203,14 +203,22 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
   .noprint{display:none!important}
   .pfoot{page-break-inside:avoid;break-inside:avoid}
 }
+/* ===== مۆبایل — سلاید لە سەرەوە هەمیشە دیار ===== */
 @media(max-width:900px){
-  .app{flex-direction:column}
-  .side{position:fixed;bottom:0;top:auto;height:auto;width:100%;flex-direction:row;align-items:center;
-    padding:6px;z-index:40;border-top:1px solid var(--line);border-inline-start:0}
-  .brand,.foot,.userbox{display:none}
-  .nav{flex-direction:row;overflow-x:auto;gap:4px}
-  .nav button,.nav a{white-space:nowrap;padding:9px 10px}
-  .main{padding-bottom:86px}
+  .app{flex-direction:column-reverse}
+  .side{position:fixed;top:0;inset-inline-start:0;width:100%;height:auto;
+    flex-direction:column;gap:0;padding:0;z-index:100;
+    border-inline-start:0;border-bottom:1px solid var(--line);
+    box-shadow:0 4px 18px rgba(15,23,42,.12)}
+  .brand{padding:8px 12px 4px;justify-content:center;text-align:center}
+  .brand .mark{display:none}
+  .userbox{display:none}
+  .nav{flex-direction:row;overflow-x:auto;gap:4px;padding:0 8px 6px;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .nav::-webkit-scrollbar{display:none}
+  .nav button,.nav a{white-space:nowrap;padding:8px 10px;font-size:13px;flex-shrink:0}
+  .foot{display:none}
+  .main{padding:14px 12px 30px;margin-top:96px}
 }
 </style>
 </head>

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ckb" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>پێویستییەکانی سیستەم — پەروەردە ٢٠٢٦</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--font:"Parwarda2026","Rabar","Noto Naskh Arabic",Tahoma,sans-serif;
+  --bg:#f2f5fb;--panel:#fff;--ink:#16203a;--mut:#64748b;--line:#e2e8f0;
+  --br:#0e7490;--br2:#06b6d4;--no:#dc2626}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font)}
+.top{background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;padding:16px 22px;
+  display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.top h1{margin:0;font-size:19px}
+.top a,.top button{all:unset;cursor:pointer;font:inherit;font-size:13px;font-weight:700;
+  background:rgba(255,255,255,.2);padding:8px 14px;border-radius:10px;transition:.3s}
+.top a:hover,.top button:hover{background:rgba(255,255,255,.35)}
+.wrap{max-width:900px;margin:0 auto;padding:22px 18px 50px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}
+.card h2{margin:0 0 10px;font-size:17px;color:var(--br)}
+.hint{color:var(--mut);font-size:13px;line-height:1.9;margin:0 0 12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:8px}
+.f{flex:1;min-width:150px}
+.f label{display:block;color:var(--mut);font-size:12.5px;margin-bottom:4px}
+.inp{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:var(--panel);color:var(--ink)}
+.inp:focus{outline:none;border-color:var(--br2);box-shadow:0 0 0 3px rgba(6,182,212,.1)}
+.sel{padding:10px;border:1px solid var(--line);border-radius:10px;font:inherit;background:var(--panel);color:var(--ink)}
+.btn{all:unset;cursor:pointer;font:inherit;font-weight:700;padding:10px 16px;border-radius:10px;color:#fff;
+  background:linear-gradient(135deg,var(--br),var(--br2));transition:.3s}
+.btn:hover{transform:translateY(-1px)}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;margin-top:16px}
+.item{display:flex;flex-direction:column;align-items:center;text-align:center;position:relative}
+.item a{width:70px;height:70px;border-radius:20px;display:grid;place-items:center;text-decoration:none;
+  background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;box-shadow:0 6px 16px rgba(6,182,212,.3);
+  transition:transform .35s,box-shadow .35s}
+.item a:hover{transform:translateY(-4px) scale(1.06);box-shadow:0 12px 26px rgba(6,182,212,.5)}
+.item a svg{width:36px;height:36px;fill:#fff}
+.item .nm{margin-top:8px;font-size:13px;font-weight:700}
+.lrow{display:flex;align-items:center;gap:12px;background:var(--bg);border:1px solid var(--line);
+  border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.lrow .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex-shrink:0;
+  background:linear-gradient(135deg,var(--br),var(--br2))}
+.lrow .ic svg{width:24px;height:24px;fill:#fff}
+.lrow .li{flex:1;min-width:0}
+.lrow .li b{display:block;font-size:14px}
+.lrow .li small{color:var(--mut);font-size:11px;word-break:break-all}
+.empty{text-align:center;color:var(--mut);padding:24px 10px}
+.authw{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#0e7490,#06b6d4)}
+.acard{background:#fff;border-radius:20px;padding:30px 26px;text-align:center;width:min(90vw,380px)}
+.acard h2{color:var(--ink)}
+.acard p{color:var(--mut);font-size:13px}
+.badge{display:inline-block;font-size:10.5px;padding:2px 8px;border-radius:12px;margin-inline-start:6px;
+  background:rgba(220,38,38,.1);color:var(--no);font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="authw" id="authScreen" style="display:none">
+  <div class="acard">
+    <h2>پێویستییەکانی سیستەم</h2>
+    <p>پێویستە سەرەتا بچیتە ژوورەوە لە سیستەمی سەرەکی</p>
+    <a class="btn" href="./index.html" style="color:#fff;text-decoration:none"> بڕۆ بۆ چوونەژوورەوە</a>
+  </div>
+</div>
+
+<div class="appw" id="appMain" style="display:none">
+  <div class="top">
+    <h1>📎 پێویستییەکانی سیستەم</h1>
+    <div style="display:flex;gap:8px">
+      <span id="uRole" style="font-size:11px;padding:4px 10px;border-radius:14px;background:rgba(255,255,255,.2)"></span>
+      <a href="./index.html">🏠 داشبۆرد</a>
+    </div>
+  </div>
+  <div class="wrap">
+
+    <div class="card" id="editBox" style="display:none">
+      <h2>➕ زیادکردنی پێویستی</h2>
+      <p class="hint">لینکەکان لای بەکارهێنەری گشتی <b>شاراوەن</b> — تەنها ئایکۆنەکان دەبینن و بە کلیک دەگەنە مەبەست.
+      <span class="badge">فۆنتی پەروەردە لای گشتی شاراوەیە</span></p>
+      <div class="row">
+        <div class="f"><label>ناوی پێویستی</label><input class="inp" id="rqName" placeholder="......."></div>
+        <div class="f" style="max-width:220px"><label>جۆر</label>
+          <select class="sel" id="rqType" style="width:100%">
+            <option value="download">داگرتنی تر</option>
+            <option value="font">داگرتنی فۆنتی پەروەردە</option>
+          </select></div>
+        <div class="f" style="flex:1.6"><label>لینکی داگرتن</label><input class="inp" id="rqUrl" placeholder="https://..."></div>
+        <button class="btn" onclick="addReq()">➕ زیادکردن</button>
+      </div>
+      <div id="reqList" style="margin-top:14px"></div>
+    </div>
+
+    <div class="card">
+      <h2>📎 پێویستییەکان</h2>
+      <div class="grid" id="showBox"></div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast" style="position:fixed;bottom:16px;inset-inline-start:16px;z-index:60"></div>
+
+<script>
+const SUPA_URL='https://igvzbyjucwrjrrjwumrj.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlndnpieWp1Y3dyanJyand1bXJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMjg4MjYsImV4cCI6MjEwNTkwNDgyNn0.vvKxUiFA79ZzvkHJ3lc8WymX5ACRLIkgbKo8c2XezIQ';
+const supa=supabase.createClient(SUPA_URL,SUPA_KEY);
+let me=null,isOwner=false,NEEDS=[];
+
+const IC={
+  font:'<svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>',
+  download:'<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>'
+};
+function toast(m,k){const t=document.createElement('div');
+  t.style.cssText='background:#fff;border-inline-start:5px solid '+(k==='no'?'#dc2626':'#16a34a')+
+  ';border-radius:10px;padding:10px 16px;margin-top:8px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.15);max-width:360px';
+  t.textContent=m;document.getElementById('toast').appendChild(t);setTimeout(()=>t.remove(),3500)}
+
+supa.auth.onAuthStateChange(async(ev,s)=>{
+  if(s?.user){me=s.user;await start()}else{document.getElementById('authScreen').style.display=''}
+});
+async function start(){
+  document.getElementById('authScreen').style.display='none';
+  document.getElementById('appMain').style.display='';
+  try{const{data:p}=await supa.from('pw_profiles').select('role').eq('id',me.id).maybeSingle();
+    isOwner=p?.role==='owner'}catch(e){isOwner=false}
+  document.getElementById('uRole').textContent=isOwner?'👑 خاوەنی پرۆژە':'بەکارهێنەری گشتی';
+  document.getElementById('editBox').style.display=isOwner?'':'none';
+  await load();
+}
+async function load(){
+  try{
+    const{data}=await supa.from('pw_about').select('payload').eq('id',1).maybeSingle();
+    NEEDS=(data?.payload?.needs)||[];
+  }catch(e){NEEDS=[]}
+  render();
+}
+function render(){
+  const ed=document.getElementById('reqList'),sh=document.getElementById('showBox');
+  if(isOwner){
+    ed.innerHTML=!NEEDS.length?'<p class="hint">هیچ پێویستییەک زیاد نەکراوە</p>':
+      NEEDS.map((l,i)=>'<div class="lrow"><div class="ic">'+(IC[l.type==='font'?'font':'download'])+'</div>'+
+      '<div class="li"><b>'+esc(l.name)+(l.type==='font'?' <span class="badge">شاراوە لای گشتی</span>':'')+'</b>'+
+      '<small>'+esc(l.url)+'</small></div>'+
+      '<button class="btn ghost" onclick="delReq('+i+')">🗑️</button></div>').join('');
+  }
+  const vis=NEEDS.filter(l=>!(l.type==='font'&&!isOwner));
+  sh.innerHTML=!vis.length?'<p class="empty">هێشتا هیچ پێویستییەک زیاد نەکراوە</p>':
+    vis.map(l=>'<div class="item">'+
+      '<a href="'+(l.type==='font'&&!isOwner?'javascript:void(0)':esc(l.url))+'" target="_blank" title="'+esc(l.name)+'">'+
+      (IC[l.type==='font'?'font':'download'])+'</a>'+
+      '<span class="nm">'+esc(l.name)+'</span></div>').join('');
+}
+function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+async function persist(){
+  try{
+    const{data}=await supa.from('pw_about').select('payload').eq('id',1).maybeSingle();
+    const pl=(data?.payload)||{};
+    pl.needs=NEEDS;
+    await supa.from('pw_about').update({payload:pl,updated_at:new Date().toISOString()}).eq('id',1);
+  }catch(e){toast('پاشەکەوت سەرکەوتوو نەبوو','no')}
+}
+async function addReq(){
+  if(!isOwner)return;
+  const n=rqName.value.trim(),u=rqUrl.value.trim(),t=rqType.value;
+  if(!n||!u){toast('ناو و لینک بنووسە','no');return}
+  NEEDS.push({name:n,url:u,type:t});
+  rqName.value='';rqUrl.value='';
+  await persist();render();toast('زیاد کرا')}
+async function delReq(i){
+  if(!isOwner||!confirm('دڵنیایت لە سڕینەوەی «'+NEEDS[i].name+'»؟'))return;
+  NEEDS.splice(i,1);await persist();render();toast('سڕدرایەوە','no')}
+</script>
+</body>
+</html>

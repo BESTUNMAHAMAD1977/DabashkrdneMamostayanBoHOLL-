@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="ckb" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>پەیوەندی لە ڕێگەی سۆشیال — پەروەردە ٢٠٢٦</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--font:"Parwarda2026","Rabar","Noto Naskh Arabic",Tahoma,sans-serif;
+  --bg:#f2f5fb;--panel:#fff;--ink:#16203a;--mut:#64748b;--line:#e2e8f0;
+  --br:#0e7490;--br2:#06b6d4;--ok:#16a34a;--no:#dc2626}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font)}
+.top{background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;padding:16px 22px;
+  display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.top h1{margin:0;font-size:19px}
+.top a,.top button{all:unset;cursor:pointer;font:inherit;font-size:13px;font-weight:700;
+  background:rgba(255,255,255,.2);padding:8px 14px;border-radius:10px;transition:.3s}
+.top a:hover,.top button:hover{background:rgba(255,255,255,.35)}
+.wrap{max-width:900px;margin:0 auto;padding:22px 18px 50px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}
+.card h2{margin:0 0 10px;font-size:17px;color:var(--br)}
+.hint{color:var(--mut);font-size:13px;line-height:1.9;margin:0 0 12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:8px}
+.f{flex:1;min-width:170px}
+.f label{display:block;color:var(--mut);font-size:12.5px;margin-bottom:4px}
+.inp{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:var(--panel);color:var(--ink)}
+.inp:focus{outline:none;border-color:var(--br2);box-shadow:0 0 0 3px rgba(6,182,212,.1)}
+.btn{all:unset;cursor:pointer;font:inherit;font-weight:700;padding:10px 16px;border-radius:10px;color:#fff;
+  background:linear-gradient(135deg,var(--br),var(--br2));transition:.3s}
+.btn:hover{transform:translateY(-1px)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:18px;margin-top:16px}
+.item{display:flex;flex-direction:column;align-items:center;text-align:center}
+.item a{width:76px;height:76px;border-radius:22px;display:grid;place-items:center;text-decoration:none;
+  color:#fff;transition:transform .35s,box-shadow .35s;box-shadow:0 8px 20px rgba(0,0,0,.18)}
+.item a:hover{transform:translateY(-4px) scale(1.07)}
+.item a svg{width:38px;height:38px;fill:#fff}
+.wa{background:linear-gradient(135deg,#25d366,#128c7e)}
+.tg{background:linear-gradient(135deg,#37aee2,#1e96c8)}
+.fb{background:linear-gradient(135deg,#1877f2,#0c5fd1)}
+.item .nm{margin-top:9px;font-size:13.5px;font-weight:700}
+/* چات */
+.chatbox{display:flex;flex-direction:column;height:460px}
+.cstatus{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;margin-bottom:10px}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block}
+.dot.on{background:var(--ok);box-shadow:0 0 8px rgba(22,163,74,.6)}
+.dot.off{background:var(--no);box-shadow:0 0 8px rgba(220,38,38,.5)}
+.msgs{flex:1;overflow-y:auto;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--bg);display:flex;flex-direction:column;gap:8px}
+.msg{max-width:75%;padding:8px 14px;border-radius:14px;font-size:14px;line-height:1.8;word-break:break-word}
+.msg.me{align-self:flex-start;background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;border-bottom-right-radius:4px}
+.msg.them{align-self:flex-end;background:#fff;border:1px solid var(--line);border-bottom-left-radius:4px}
+.msg .who{font-size:10.5px;opacity:.85;display:block;margin-bottom:2px}
+.cinput{display:flex;gap:8px;margin-top:10px;position:relative}
+.cinput input{flex:1;padding:11px 14px;border:1px solid var(--line);border-radius:12px;font:inherit;background:var(--panel);color:var(--ink)}
+.cinput input:focus{outline:none;border-color:var(--br2)}
+.cbtn{all:unset;cursor:pointer;font-size:20px;padding:9px 14px;border-radius:12px;color:#fff;
+  background:linear-gradient(135deg,var(--br),var(--br2))}
+.emoji{position:absolute;bottom:56px;inset-inline-start:0;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:10px;display:none;grid-template-columns:repeat(8,1fr);gap:4px;
+  box-shadow:0 10px 30px rgba(0,0,0,.15);z-index:10;max-width:320px}
+.emoji.on{display:grid}
+.emoji span{cursor:pointer;font-size:20px;text-align:center;padding:3px;border-radius:6px;transition:.2s}
+.emoji span:hover{background:var(--bg);transform:scale(1.2)}
+.authw{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#0e7490,#06b6d4)}
+.acard{background:#fff;border-radius:20px;padding:30px 26px;text-align:center;width:min(90vw,380px)}
+.acard h2{color:var(--ink)}
+.acard p{color:var(--mut);font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="authw" id="authScreen" style="display:none">
+  <div class="acard">
+    <h2>پەیوەندی لە ڕێگەی سۆشیال</h2>
+    <p>پێویستە سەرەتا بچیتە ژوورەوە لە سیستەمی سەرەکی</p>
+    <a class="btn" href="./index.html" style="color:#fff;text-decoration:none"> بڕۆ بۆ چوونەژوورەوە</a>
+  </div>
+</div>
+
+<div id="appMain" style="display:none">
+  <div class="top">
+    <h1>💬 پەیوەندی لە ڕێگەی سۆشیال</h1>
+    <div style="display:flex;gap:8px">
+      <span id="uRole" style="font-size:11px;padding:4px 10px;border-radius:14px;background:rgba(255,255,255,.2)"></span>
+      <a href="./index.html">🏠 داشبۆرد</a>
+    </div>
+  </div>
+  <div class="wrap">
+
+    <div class="card" id="editBox" style="display:none">
+      <h2>⚙️ ڕێکخستنی پەیوەندییەکان — تەنها خاوەنی پرۆژە</h2>
+      <p class="hint">ژمارە و لینکەکان لای بەکارهێنەری گشتی <b>شاراون</b> — تەنها ئایکۆنەکان دەبینن و بە کلیک دەگەنە مەبەست.</p>
+      <div class="row">
+        <div class="f"><label>واتس ئاپ — ژمارەی مۆبایل</label><input class="inp" id="waIn" placeholder="0750..."></div>
+        <div class="f"><label>تێلیگرام — ژمارە یان ناوی کەناڵ</label><input class="inp" id="tgIn" placeholder="0750... یان @channel"></div>
+        <div class="f"><label>فەیسبووک — لینکی پەڕە</label><input class="inp" id="fbIn" placeholder="https://facebook.com/..."></div>
+      </div>
+      <button class="btn" onclick="saveSocial()">💾 پاشەکەوتکردن</button>
+    </div>
+
+    <div class="card">
+      <h2>🌐 پەیوەندی بە سۆشیال میدیاوە</h2>
+      <div class="grid" id="socialShow"></div>
+    </div>
+
+    <div class="card">
+      <h2>💬 چات لەگەڵ دیڤلۆپەر</h2>
+      <div class="chatbox">
+        <div class="cstatus"><span class="dot off" id="devDot"></span><span id="devStat">دۆخی دیڤلۆپەر دەپشکنرێت...</span></div>
+        <div class="msgs" id="msgs"></div>
+        <div class="emoji" id="emojiBox"></div>
+        <div class="cinput">
+          <button class="cbtn" onclick="toggleEmoji()" title="ئیمۆجی">😊</button>
+          <input id="chatIn" placeholder="پەیامەکەت بنووسە..." onkeydown="if(event.key==='Enter')sendMsg()">
+          <button class="cbtn" onclick="sendMsg()" title="ناردن">➤</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast" style="position:fixed;bottom:16px;inset-inline-start:16px;z-index:60"></div>
+
+<script>
+const SUPA_URL='https://igvzbyjucwrjrrjwumrj.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlndnpieWp1Y3dyanJyand1bXJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMjg4MjYsImV4cCI6MjEwNTkwNDgyNn0.vvKxUiFA79ZzvkHJ3lc8WymX5ACRLIkgbKo8c2XezIQ';
+const supa=supabase.createClient(SUPA_URL,SUPA_KEY);
+let me=null,isOwner=false,SOCIAL=null,lastMsgId=0;
+
+const SVG={
+  wa:'<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>',
+  tg:'<svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>',
+  fb:'<svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>'
+};
+const EMOJIS='😀😊😍🥰😂🤣😉😎🤔😐😴😭😡🥳🤗👍👎👏🙏💪🔥❤️💔⭐🎉🎊✅❌❓💡📞💬📱⏰📚📝✏️🔑🚀';
+function toast(m,k){const t=document.createElement('div');
+  t.style.cssText='background:#fff;border-inline-start:5px solid '+(k==='no'?'#dc2626':'#16a34a')+
+  ';border-radius:10px;padding:10px 16px;margin-top:8px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.15);max-width:360px';
+  t.textContent=m;document.getElementById('toast').appendChild(t);setTimeout(()=>t.remove(),3500)}
+function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+supa.auth.onAuthStateChange(async(ev,s)=>{
+  if(s?.user){me=s.user;await start()}else{document.getElementById('authScreen').style.display=''}
+});
+async function start(){
+  document.getElementById('authScreen').style.display='none';
+  document.getElementById('appMain').style.display='';
+  try{const{data:p}=await supa.from('pw_profiles').select('role').eq('id',me.id).maybeSingle();
+    isOwner=p?.role==='owner'}catch(e){isOwner=false}
+  document.getElementById('uRole').textContent=isOwner?'👑 خاوەنی پرۆژە':'بەکارهێنەری گشتی';
+  document.getElementById('editBox').style.display=isOwner?'':'none';
+  /* هەڵگرتی هەناسە — بۆ دۆخی ئۆنلاین */
+  heartbeat();setInterval(heartbeat,30000);
+  await loadSocial();
+  renderSocial();
+  loadChat();setInterval(loadChat,3000);
+}
+async function heartbeat(){
+  try{await supa.from('pw_profiles').update({last_seen:new Date().toISOString()}).eq('id',me.id)}catch(e){}
+}
+async function loadSocial(){
+  try{
+    const{data}=await supa.from('pw_about').select('payload').eq('id',1).maybeSingle();
+    SOCIAL=(data?.payload?.social)||{};
+  }catch(e){SOCIAL={}}
+  if(isOwner){waIn.value=SOCIAL.whatsapp||'';tgIn.value=SOCIAL.telegram||'';fbIn.value=SOCIAL.facebook||''}
+}
+async function saveSocial(){
+  if(!isOwner)return;
+  SOCIAL={whatsapp:waIn.value.trim(),telegram:tgIn.value.trim(),facebook:fbIn.value.trim()};
+  try{
+    const{data}=await supa.from('pw_about').select('payload').eq('id',1).maybeSingle();
+    const pl=(data?.payload)||{};
+    pl.social=SOCIAL;
+    await supa.from('pw_about').update({payload:pl,updated_at:new Date().toISOString()}).eq('id',1);
+    toast('پاشەکەوت کرا');renderSocial();
+  }catch(e){toast('پاشەکەوت سەرکەوتوو نەبوو','no')}
+}
+function renderSocial(){
+  const sh=document.getElementById('socialShow');
+  if(!SOCIAL||(!SOCIAL.whatsapp&&!SOCIAL.telegram&&!SOCIAL.facebook)){
+    sh.innerHTML='<p class="hint">هێشتا هیچ پەیوەندییەک ڕێک نەخراوە</p>';return}
+  let h='';
+  if(SOCIAL.whatsapp)h+='<div class="item"><a class="wa" href="https://wa.me/'+SOCIAL.whatsapp.replace(/[^0-9]/g,'')+'" target="_blank" title="واتس ئاپ">'+SVG.wa+'</a><span class="nm">واتس ئاپ</span></div>';
+  if(SOCIAL.telegram)h+='<div class="item"><a class="tg" href="https://t.me/'+SOCIAL.telegram.replace(/[^0-9a-zA-Z_@]/g,'')+'" target="_blank" title="تێلیگرام">'+SVG.tg+'</a><span class="nm">تێلیگرام</span></div>';
+  if(SOCIAL.facebook)h+='<div class="item"><a class="fb" href="'+esc(SOCIAL.facebook)+'" target="_blank" title="فەیسبووک">'+SVG.fb+'</a><span class="nm">فەیسبووک</span></div>';
+  sh.innerHTML=h;
+}
+/* ================= چات ================= */
+const EMOJI_LIST=EMOJIS.match(/./gu);
+function toggleEmoji(){
+  const b=document.getElementById('emojiBox');
+  if(!b.classList.contains('on')){
+    b.innerHTML=EMOJI_LIST.map(e=>'<span onclick="addEmoji(\''+e+'\')">'+e+'</span>').join('');
+  }
+  b.classList.toggle('on');
+}
+function addEmoji(e){chatIn.value+=e;chatIn.focus()}
+async function sendMsg(){
+  const txt=chatIn.value.trim();
+  if(!txt)return;
+  try{
+    await supa.from('pw_chat').insert({sender:me.email,message:txt});
+    chatIn.value='';document.getElementById('emojiBox').classList.remove('on');
+    loadChat();
+  }catch(e){toast('ناردنی پەیام سەرکەوتوو نەبوو','no')}
+}
+async function loadChat(){
+  try{
+    const{data}=await supa.from('pw_chat').select('*').order('id',{ascending:true}).limit(300);
+    const msgs=(data||[]);
+    if(msgs.length&&msgs[msgs.length-1].id===lastMsgId&&document.getElementById('msgs').childElementCount)return;
+    const box=document.getElementById('msgs');
+    box.innerHTML=msgs.map(m=>{
+      const isMe=m.sender===me.email;
+      const d=new Date(m.created_at);
+      const tm=String(d.getHours()%12||12).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+(d.getHours()>=12?' PM':' AM');
+      return '<div class="msg '+(isMe?'me':'them')+'">'+
+        '<span class="who">'+esc(isMe?'تۆ':(m.sender||'—'))+' — '+tm+'</span>'+
+        esc(m.message)+'</div>'}).join('');
+    box.scrollTop=box.scrollHeight;
+    if(msgs.length)lastMsgId=msgs[msgs.length-1].id;
+  }catch(e){}
+  /* دۆخی دیڤلۆپەر */
+  try{
+    const{data:prof}=await supa.from('pw_profiles').select('last_seen').eq('role','owner').maybeSingle();
+    const online=prof&&prof.last_seen&&(Date.now()-new Date(prof.last_seen))<120000;
+    document.getElementById('devDot').className='dot '+(online?'on':'off');
+    document.getElementById('devStat').textContent=online?'دیڤلۆپەر ئۆنلاینە':'دیڤلۆپەر ئۆفلاینە';
+  }catch(e){}
+}
+</script>
+</body>
+</html>

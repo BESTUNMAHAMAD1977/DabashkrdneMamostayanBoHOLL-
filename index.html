@@ -61,17 +61,14 @@ body{margin:0;background:var(--bg);color:var(--ink);transition:background .3s,co
 .side{width:260px;flex-shrink:0;background:var(--panel);border-inline-start:1px solid var(--line);
   padding:16px 12px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px}
 .brand{display:flex;align-items:center;gap:10px;padding:4px 10px 14px}
-/* ناونیشانی قوتابخانە لە چوارگۆشەکەدا */
 .mark{min-width:42px;max-width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
   background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;font-size:13px;font-weight:800;
   line-height:1.25;padding:2px;text-align:center;overflow:hidden;word-break:break-word}
-.mark.big{min-width:42px}
 .brand small{color:var(--mut);line-height:1.6}
 .userbox{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:6px;font-size:12.5px}
 .userbox .role{display:inline-block;margin-top:6px;padding:3px 10px;border-radius:20px;font-size:11px;
   background:rgba(6,182,212,.15);color:var(--br);font-weight:700}
 .userbox .role.owner{background:rgba(22,163,74,.15);color:var(--ok)}
-/* دوگمەی نیشاندانی ئیمەیڵ */
 .emailrow{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:6px}
 .emailrow .emb{flex:1;cursor:pointer;font-size:12px;color:var(--mut);font-weight:700;
   background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 8px;text-align:center;
@@ -141,6 +138,24 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
 .logoBox img.logo{max-width:110px;max-height:90px;margin:6px auto;display:block}
 .logoBox .ph{color:var(--mut);border:1px solid var(--line);border-radius:10px;padding:24px 10px;margin-bottom:10px}
 .logoBox .row{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+/* ===== بەشی پەیوەندی و لینکەکان ===== */
+.linksgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:12px}
+.linkcard{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px;
+  display:flex;align-items:center;gap:12px;transition:.3s}
+.linkcard:hover{border-color:var(--br2);transform:translateY(-2px);box-shadow:0 8px 20px rgba(6,182,212,.12)}
+.linkcard .lic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:24px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--br),var(--br2));color:#fff}
+.linkcard .li{flex:1;min-width:0}
+.linkcard .li b{display:block;font-size:14px}
+.linkcard .li small{color:var(--mut);word-break:break-all;font-size:11.5px;display:block;line-height:1.7}
+.linkcard .acts{display:flex;gap:6px;flex-shrink:0}
+.iconsonly{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.icononly{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;font-size:28px;
+  background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;text-decoration:none;
+  transition:transform .35s ease,box-shadow .35s ease;box-shadow:0 6px 16px rgba(6,182,212,.3)}
+.icononly:hover{transform:translateY(-4px) scale(1.06);box-shadow:0 12px 26px rgba(6,182,212,.5)}
+.fblink{display:block;text-align:center;margin-top:6px;font-size:11px;color:var(--mut);word-break:break-all}
+.inprow{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}
 .pt{width:100%;border-collapse:collapse;background:#fff;color:#111}
 .pt th,.pt td{border:1px solid #444;padding:6px 8px;text-align:center}
 .pt th{background:#e8f4f8}
@@ -245,7 +260,6 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
     <div class="userbox">
       <span class="role" id="uRole">—</span>
       <div style="margin-top:8px"><button class="btn ghost sm" onclick="doLogout()">🚪 دەرچوون</button></div>
-      <!-- نیشاندانی ئیمەیڵ بە دوگمەی ئارەزوومەندی -->
       <div class="emailrow">
         <div class="emb" id="uEmailMask" onclick="toggleEmail()" title="کلیک بکە بۆ نیشاندانی ئیمەیڵ">••••••••••</div>
         <button class="eyeb" id="eyeEmail" onclick="toggleEmail()" title="نیشاندانی ئیمەیڵ">👁️</button>
@@ -537,6 +551,33 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
     </section>
 
     <section class="view" id="v-about">
+      <!-- بۆ خاوەنی پرۆژە: دەستکاریکردنی پەیوەندی و لینکەکان -->
+      <div class="card" id="linkEdit" style="display:none">
+        <h2>🔗 پەیوەندی و لینکە پێویستەکان — دەستکاریکردن</h2>
+        <p class="hint">لینکەکان لە داتابەیسدا پاشەکەوت دەکرێن و بۆ هەموو بەکارهێنەران دەگەن.
+        <b>فۆنتی پەروەردە</b> لە لینکی گشتیدا شاراوەیە — تەنها تۆ دەیبینیت.</p>
+        <div class="inprow">
+          <div style="flex:1;min-width:140px"><label class="lbl">ناوی لینک</label><input class="inp" id="lkName" placeholder="......."></div>
+          <div style="min-width:130px"><label class="lbl">جۆری لینک</label>
+            <select class="sel" id="lkType">
+              <option value="whatsapp">واتس ئاپ</option>
+              <option value="telegram">تێلیگرام</option>
+              <option value="facebook">فەیسبووک</option>
+              <option value="download">داگرتن (فۆنتی پەروەردە)</option>
+              <option value="custom">لینکی گشتی</option>
+            </select></div>
+          <div style="flex:1.4;min-width:180px"><label class="lbl">لینک (URL یان ژمارەی مۆبایل)</label><input class="inp" id="lkUrl" placeholder="......."></div>
+          <button class="btn" onclick="addLink()">➕ زیادکردنی لینک</button>
+        </div>
+        <div class="linksgrid" id="linksEdit"></div>
+      </div>
+
+      <!-- بۆ هەمووان: ئایکۆنەکانی پەیوەندی -->
+      <div class="card">
+        <h2>📞 پەیوەندی و لینکە پێویستەکان</h2>
+        <div class="iconsonly" id="linksShow"></div>
+      </div>
+
       <div class="card" id="abEdit" style="display:none">
         <h2>✏️ دەستکاریکردنی بەشی دەربارە — تەنها خاوەنی پرۆژە</h2>
         <label class="lbl">ناوی خاوەنی پڕۆژە</label><input class="inp" id="abName">
@@ -718,6 +759,7 @@ async function startApp(){
   r.classList.toggle('owner',isOwner);
   document.querySelector('#nav button[data-v=log]').style.display=isOwner?'':'none';
   document.getElementById('abEdit').style.display=isOwner?'':'none';
+  document.getElementById('linkEdit').style.display=isOwner?'':'none';
   bootApp();
   await loadCloud();
 }
@@ -739,6 +781,7 @@ async function loadCloud(){
       if(ABOUT.logo_owner){idb.set('logo_owner',ABOUT.logo_owner).then(()=>showLogo('owner',ABOUT.logo_owner))}
     }else{ABOUT=null}
     renderAbout();
+    loadLinks();
     s.textContent='✓ دواترین هاوکات: '+timeNow();
   }catch(e){
     s.textContent='⚠ داتای ناوخۆیی (بێ ئینتەرنێت)';
@@ -890,12 +933,11 @@ async function delLogo(key){
   if(key==='owner'&&a)a.hidden=true;
   logAct('سڕینەوەی وێنە');toast('وێنە سڕدرایەوە','no');buildPrint()}
 
-/* ================= چێک بۆکسی لۆگۆ — گەڕانەوەی ڕاستەوخۆ بۆ سەرپەڕە ================= */
+/* ================= چێک بۆکسی لۆگۆ ================= */
 function logoChk(key,checked){
   const c=LS.get(lsKey('pw_chk'),{min:true,sch:true});
   if(key==='min')c.min=checked;else c.sch=checked;
   LS.set(lsKey('pw_chk'),c);
-  /* نوێکردنەوەی ڕاستەوخۆی سەرپەڕەی چاپکردن */
   buildPrint();
   toast(checked?'لۆگۆکە لە چاپکردندا چالاک کرا':'لۆگۆکە لە چاپکردندا لابرا');
 }
@@ -928,6 +970,77 @@ async function saveAbout(){
     logAct('گۆڕینی بەشی دەربارە');toast('بەشی دەربارە پاشەکەوت کرا');renderAbout();
   }catch(e){toast('پاشەکەوتکردن سەرکەوتوو نەبوو','no')}
 }
+
+/* ================= پەیوەندی و لینکەکان ================= */
+const LINK_TYPES={
+  whatsapp:{icon:'📱',label:'واتس ئاپ',build:u=>'https://wa.me/'+u.replace(/[^0-9]/g,'')},
+  telegram:{icon:'✈️',label:'تێلیگرام',build:u=>'https://t.me/'+u.replace(/[^0-9a-zA-Z_@]/g,'')},
+  facebook:{icon:'👍',label:'فەیسبووک',build:u=>u},
+  download:{icon:'⬇️',label:'داگرتن — فۆنتی پەروەردە',build:u=>u,hiddenPublic:true},
+  custom:{icon:'🔗',label:'لینکی گشتی',build:u=>u}
+};
+let LINKS=null;
+
+async function loadLinks(){
+  if(!supa)return;
+  try{
+    const{data}=await supa.from('pw_about').select('payload').eq('id',1).maybeSingle();
+    if(data?.payload?.links){LINKS=data.payload.links}
+  }catch(e){}
+  renderLinks();
+}
+async function saveLinks(){
+  if(!isOwner)return;
+  try{
+    ABOUT=ABOUT||{...ABOUT_DEF};
+    ABOUT.links=LINKS;
+    await supa.from('pw_about').update({payload:ABOUT,updated_at:new Date().toISOString()}).eq('id',1);
+  }catch(e){}
+}
+function renderLinks(){
+  const ed=document.getElementById('linksEdit'),sh=document.getElementById('linksShow');
+  if(!ed)return;
+  if(isOwner){
+    ed.style.display='';
+    if(!LINKS||!LINKS.length){ed.innerHTML='<p class="hint">هیچ لینکێک زیاد نەکراوە</p>'}
+    else{
+      ed.innerHTML=LINKS.map((l,i)=>{
+        const t=LINK_TYPES[l.type]||LINK_TYPES.custom;
+        return '<div class="linkcard"><div class="lic">'+t.icon+'</div>'+
+          '<div class="li"><b>'+esc(l.name)+(t.hiddenPublic?' <span class="st">تەنها خاوەن</span>':'')+'</b>'+
+          '<small>'+esc(l.url)+'</small></div>'+
+          '<div class="acts"><button class="btn ghost sm" onclick="delLink('+i+')">🗑️</button></div></div>'}).join('');
+    }
+  }else ed.style.display='none';
+  const visible=(LINKS||[]).filter(l=>{
+    const t=LINK_TYPES[l.type]||LINK_TYPES.custom;
+    return !(t.hiddenPublic&&!isOwner)});
+  if(!visible.length){sh.innerHTML='<p class="hint">هێشتا هیچ پەیوەندییەک زیاد نەکراوە</p>';return}
+  sh.innerHTML=visible.map(l=>{
+    const t=LINK_TYPES[l.type]||LINK_TYPES.custom;
+    const href=t.build(l.url);
+    let extra='';
+    if(l.type==='facebook'&&l.url)extra='<span class="fblink">'+esc(l.url)+'</span>';
+    return '<a class="icononly" href="'+esc(href)+'" target="_blank" title="'+esc(l.name)+'">'+t.icon+'</a>'+extra;
+  }).join('');
+}
+function addLink(){
+  if(!isOwner){toast('تەنها خاوەنی پرۆژە دەتوانێت لینک زیاد بکات','no');return}
+  const name=lkName.value.trim(),url=lkUrl.value.trim(),type=lkType.value;
+  if(!name||!url){toast('ناوی لینک و لینکەکە بنووسە','no');return}
+  if(!LINKS)LINKS=[];
+  LINKS.push({name,url,type});
+  lkName.value='';lkUrl.value='';
+  saveLinks();renderLinks();
+  logAct('زیادکردنی لینک: '+name);toast('لینک زیاد کرا')}
+async function delLink(i){
+  if(!isOwner)return;
+  const ok=await confirmBox('ئایە ڕازیت بە سڕینەوەی «'+(LINKS[i].name)+'»؟');
+  if(!ok)return;
+  const nm=LINKS[i].name;
+  LINKS.splice(i,1);
+  saveLinks();renderLinks();
+  logAct('سڕینەوەی لینک: '+nm);toast('لینک سڕدرایەوە','no')}
 
 /* ================= سلاید داشبۆرد ================= */
 const VIEWS=[
@@ -968,7 +1081,7 @@ function renderCurrent(){
   if(curView==='print')buildPrint();
   if(curView==='backup')renderBks();
   if(curView==='log')loadLog();
-  if(curView==='about')renderAbout();
+  if(curView==='about'){renderAbout();renderLinks()}
 }
 
 /* ================= کاتژمێر ================= */
@@ -1579,6 +1692,14 @@ async function wipeAll(){
   logAct('سفرکردنەوەی سیستەم');
   toast('سیستەم سفر کرایەوە');setTimeout(()=>location.reload(),700)}
 
+/* ================= نوێکردنەوەی ناوی قوتابخانە لە سلاید ================= */
+function updateBrand(){
+  const sch=NAMES.sch||'پ';
+  const mark=document.getElementById('brandMark');
+  mark.textContent=sch;
+  mark.style.fontSize=sch.length>3?'10px':(sch.length>1?'13px':'22px');
+}
+
 /* ================= هێنانەوە لە دەستپێکدا ================= */
 function bootApp(){
   try{
@@ -1591,14 +1712,6 @@ function bootApp(){
   loadNames();initDaySelects();renderDash();buildPrint();updateBrand();
   document.getElementById('syncLbl').textContent=supa?'✓ پەیوەست بە داتابەیس':'⚠ دۆخی ناوخۆیی';
 }
-/* نوێکردنەوەی ناوی قوتابخانە لە سلاید داشبۆرد */
-function updateBrand(){
-  const sch=NAMES.sch||'پ';
-  const mark=document.getElementById('brandMark');
-  mark.textContent=sch;
-  mark.style.fontSize=sch.length>3?'10px':(sch.length>1?'13px':'22px');
-}
-
 (async()=>{
   try{
     const f=await idb.get('font');if(f)await applyFont(f);

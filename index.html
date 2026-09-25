@@ -82,9 +82,9 @@ body{margin:0;background:var(--bg);color:var(--ink);transition:background .3s,co
   background:var(--bg);border:1px solid var(--line);transition:.3s;flex-shrink:0}
 .emailrow .eyeb:hover{border-color:var(--br2)}
 .nav{display:flex;flex-direction:column;gap:5px;flex:1;overflow-y:auto}
-.nav button{all:unset;display:flex;align-items:center;gap:9px;padding:10px 11px;border-radius:12px;
-  cursor:pointer;color:var(--mut);font:inherit;font-size:14px;transition:.3s}
-.nav button:hover{background:rgba(6,182,212,.12);color:var(--ink)}
+.nav button,.nav a{all:unset;display:flex;align-items:center;gap:9px;padding:10px 11px;border-radius:12px;
+  cursor:pointer;color:var(--mut);font:inherit;font-size:14px;transition:.3s;text-decoration:none}
+.nav button:hover,.nav a:hover{background:rgba(6,182,212,.12);color:var(--ink)}
 .nav button.on{background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;font-weight:700}
 .foot{font-size:11px;color:var(--mut);padding:10px;border-top:1px solid var(--line)}
 .main{flex:1;min-width:0;padding:18px 22px 40px;max-width:1250px;margin-inline:auto}
@@ -141,31 +141,6 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
 .logoBox img.logo{max-width:110px;max-height:90px;margin:6px auto;display:block}
 .logoBox .ph{color:var(--mut);border:1px solid var(--line);border-radius:10px;padding:24px 10px;margin-bottom:10px}
 .logoBox .row{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
-/* ===== بەشی پەیوەندی و پێویستییەکان ===== */
-.linksgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:12px}
-.linkcard{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px;
-  display:flex;align-items:center;gap:12px;transition:.3s}
-.linkcard:hover{border-color:var(--br2);transform:translateY(-2px);box-shadow:0 8px 20px rgba(6,182,212,.12)}
-.linkcard .lic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;flex-shrink:0;
-  background:linear-gradient(135deg,var(--br),var(--br2));color:#fff}
-.linkcard .lic svg{width:24px;height:24px;fill:#fff}
-.linkcard .li{flex:1;min-width:0}
-.linkcard .li b{display:block;font-size:14px}
-.linkcard .li small{color:var(--mut);word-break:break-all;font-size:11.5px;display:block;line-height:1.7}
-.linkcard .acts{display:flex;gap:6px;flex-shrink:0}
-/* ئایکۆنەکان بۆ هەمووان — ئایکۆنی ڕاستەقینە + لینک لەژێر */
-.iconsonly{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin-top:14px;align-items:flex-start}
-.iconitem{display:flex;flex-direction:column;align-items:center;max-width:150px}
-.icononly{width:62px;height:62px;border-radius:18px;display:grid;place-items:center;
-  background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;text-decoration:none;
-  transition:transform .35s ease,box-shadow .35s ease;box-shadow:0 6px 16px rgba(6,182,212,.3)}
-.icononly svg{width:32px;height:32px;fill:#fff}
-.icononly:hover{transform:translateY(-4px) scale(1.06);box-shadow:0 12px 26px rgba(6,182,212,.5)}
-.iconname{margin-top:7px;font-size:12px;font-weight:700;color:var(--ink);text-align:center}
-.iconlink{display:block;max-width:150px;text-align:center;margin-top:2px;font-size:10.5px;
-  color:var(--mut);word-break:break-all;line-height:1.5;text-decoration:none;transition:.3s}
-.iconlink:hover{color:var(--br)}
-.inprow{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}
 .pt{width:100%;border-collapse:collapse;background:#fff;color:#111}
 .pt th,.pt td{border:1px solid #444;padding:6px 8px;text-align:center}
 .pt th{background:#e8f4f8}
@@ -231,7 +206,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
     padding:6px;z-index:40;border-top:1px solid var(--line);border-inline-start:0}
   .brand,.foot,.userbox{display:none}
   .nav{flex-direction:row;overflow-x:auto;gap:4px}
-  .nav button{white-space:nowrap;padding:9px 10px}
+  .nav button,.nav a{white-space:nowrap;padding:9px 10px}
   .main{padding-bottom:86px}
 }
 </style>
@@ -488,7 +463,8 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
         <p><b>یاسای توند:</b> مامۆستایەک کە دوو جار یان زیاتر لە هەمان هۆڵدا دابەش دەکرێت، بەدوای یەکدا نابن —
         مەگەر مامۆستای ئازاد نەبێت. لە حاڵەتی کەمیی تونددا، <b>مامۆستای چێککراوی هەمان ڕۆژ</b> وەک
         دوا چارەسەر بەکاردەهێنرێت، و لە کۆتایی هەموو ڕێگاکاندا، بۆ ئەوەی <b>هیچ خانەیەک بەتاڵ نەمێنێتەوە</b>،
-        مامۆستا لە دوو هۆڵی هەمان ڕۆژدا دادەنرێت (حاڵەتی زۆر توند).</p>
+        مامۆستا لە دوو هۆڵی هەمان ڕۆژدا دادەنرێت (حاڵەتی زۆر توند). هەموو ئەمانە لە
+        تۆماری پێشێلکردنەکاندا تۆمار دەکرێن.</p>
         <button class="btn" onclick="distribute()">🗂️ دابەشکردن</button>
         <button class="btn ghost" onclick="clearAssign()">🧹 پاککردنەوەی دابەشکردن</button>
       </div>
@@ -609,55 +585,6 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
           <div style="flex:1;min-width:240px"><p id="abShow" style="line-height:2.2"></p></div>
         </div>
         <p class="hint" id="abNote" style="margin-top:8px"></p>
-      </div>
-
-      <!-- ٣: دەستکاریکردنی پەیوەندییەکان — تەنها خاوەن -->
-      <div class="card" id="linkEdit" style="display:none">
-        <h2>📞 پەیوەندییەکان — دەستکاریکردن</h2>
-        <p class="hint">ژمارەی مۆبایل بۆ واتس ئاپ و تێلیگرام، یان لینکی تەواو بۆ فەیسبووک.
-        <b>زیادکردن ئازادە</b> — دەتوانیت لە هەر جۆرێک چەند لینکێک زیاد بکەیت.</p>
-        <div class="inprow">
-          <div style="flex:1;min-width:140px"><label class="lbl">ناوی پەیوەندی</label><input class="inp" id="lkName" placeholder="......."></div>
-          <div style="min-width:130px"><label class="lbl">جۆر</label>
-            <select class="sel" id="lkType">
-              <option value="whatsapp">واتس ئاپ</option>
-              <option value="telegram">تێلیگرام</option>
-              <option value="facebook">فەیسبووک</option>
-            </select></div>
-          <div style="flex:1.4;min-width:180px"><label class="lbl">ژمارەی مۆبایل یان لینک</label><input class="inp" id="lkUrl" placeholder="......."></div>
-          <button class="btn" onclick="addLink('contact')">➕ زیادکردن</button>
-        </div>
-        <div class="linksgrid" id="linksEditContact"></div>
-      </div>
-
-      <!-- ٤: دەستکاریکردنی پێویستییەکان — تەنها خاوەن -->
-      <div class="card" id="reqEdit" style="display:none">
-        <h2>📎 پێویستییەکان — دەستکاریکردن</h2>
-        <p class="hint">لینکی داگرتنی فۆنتی پەروەردە و هەر لینکی پێویستی تر — لای بەکارهێنەری گشتی
-        <b>تەنها ئایکۆن و ناوەکەیان</b> دەردەکەوێت (لینکی فۆنت شاراوەیە لای گشتی).</p>
-        <div class="inprow">
-          <div style="flex:1;min-width:140px"><label class="lbl">ناوی پێویستی</label><input class="inp" id="rqName" placeholder="......."></div>
-          <div style="min-width:150px"><label class="lbl">جۆر</label>
-            <select class="sel" id="rqType">
-              <option value="font">داگرتنی فۆنتی پەروەردە</option>
-              <option value="download">داگرتنی تر</option>
-            </select></div>
-          <div style="flex:1.4;min-width:180px"><label class="lbl">لینکی داگرتن</label><input class="inp" id="rqUrl" placeholder="......."></div>
-          <button class="btn" onclick="addLink('need')">➕ زیادکردن</button>
-        </div>
-        <div class="linksgrid" id="linksEditNeed"></div>
-      </div>
-
-      <!-- ٥: ئایکۆنەکانی پەیوەندی — بۆ هەمووان (خوارەوە) -->
-      <div class="card">
-        <h2>📞 پەیوەندییەکان</h2>
-        <div class="iconsonly" id="contactShow"></div>
-      </div>
-
-      <!-- ٦: ئایکۆنەکانی پێویستییەکان — بۆ هەمووان (خوارەوە) -->
-      <div class="card">
-        <h2>📎 پێویستییەکان</h2>
-        <div class="iconsonly" id="needShow"></div>
       </div>
     </section>
   </main>
@@ -848,8 +775,6 @@ async function startApp(){
   r.classList.toggle('owner',isOwner);
   document.querySelector('#nav button[data-v=log]').style.display=isOwner?'':'none';
   document.getElementById('abEdit').style.display=isOwner?'':'none';
-  document.getElementById('linkEdit').style.display=isOwner?'':'none';
-  document.getElementById('reqEdit').style.display=isOwner?'':'none';
   bootApp();
   await loadCloud();
 }
@@ -867,14 +792,13 @@ async function loadCloud(){
       if(row.payload._ts)curTs=row.payload._ts;
     }
     const{data:ab}=await supa.from('pw_about').select('payload').eq('id',1).maybeSingle();
-    if(ab?.payload){ABOUT=ab.payload}
-    else{ABOUT=null}
+    if(ab?.payload){ABOUT=ab.payload;
+      if(ABOUT.logo_owner){idb.set('logo_owner',ABOUT.logo_owner).then(()=>showLogo('owner',ABOUT.logo_owner))}
+    }else{ABOUT=null}
     renderAbout();
-    renderLinks();
     s.textContent='✓ دواترین هاوکات: '+timeNow();
   }catch(e){
     s.textContent='⚠ داتای ناوخۆیی (بێ ئینتەرنێت)';
-    renderLinks();
   }
 }
 function applyPayload(p){
@@ -1055,105 +979,12 @@ async function saveAbout(){
     ph2:abP2.value.trim(),rights:abRights.value.trim(),
     ...(ABOUT?.logo_owner?{logo_owner:ABOUT.logo_owner}:{}),
     ...(ABOUT?.contacts?{contacts:ABOUT.contacts}:{}),
-    ...(ABOUT?.needs?{needs:ABOUT.needs}:{})};
+    ...(ABOUT?.needs?{needs:ABOUT.needs}:{}),
+    ...(ABOUT?.social?{social:ABOUT.social}:{})};
   try{
     await supa.from('pw_about').update({payload:ABOUT,updated_at:new Date().toISOString()}).eq('id',1);
     logAct('گۆڕینی بەشی دەربارە');toast('بەشی دەربارە پاشەکەوت کرا');renderAbout();
   }catch(e){toast('پاشەکەوتکردن سەرکەوتوو نەبوو','no')}
-}
-
-/* ================= پەیوەندییەکان و پێویستییەکان ================= */
-/* ئایکۆنی SVG ـی ڕاستەقینە */
-const SVG_ICONS={
-  whatsapp:'<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>',
-  telegram:'<svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>',
-  facebook:'<svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',
-  font:'<svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>',
-  download:'<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>'
-};
-let CONTACTS=[];
-let NEEDS=[];
-
-function renderLinks(){
-  const edC=document.getElementById('linksEditContact'),shC=document.getElementById('contactShow');
-  const edN=document.getElementById('linksEditNeed'),shN=document.getElementById('needShow');
-  if(!edC||!shC||!edN||!shN)return;
-  /* دەستکاریکردن — تەنها خاوەن */
-  if(isOwner){
-    edC.style.display='';edN.style.display='';
-    edC.innerHTML=!CONTACTS.length?'<p class="hint">هیچ پەیوەندییەک زیاد نەکراوە</p>':
-      CONTACTS.map((l,i)=>{
-        const t=SVG_ICONS[l.type]||'';
-        return '<div class="linkcard"><div class="lic">'+t+'</div>'+
-          '<div class="li"><b>'+esc(l.name)+'</b><small>'+esc(l.url)+'</small></div>'+
-          '<div class="acts"><button class="btn ghost sm" onclick="delLink(\'contact\','+i+')">🗑️</button></div></div>'}).join('');
-    edN.innerHTML=!NEEDS.length?'<p class="hint">هیچ پێویستییەک زیاد نەکراوە</p>':
-      NEEDS.map((l,i)=>{
-        const t=SVG_ICONS[l.type==='font'?'font':'download'];
-        return '<div class="linkcard"><div class="lic">'+t+'</div>'+
-          '<div class="li"><b>'+esc(l.name)+(l.type==='font'?' <span class="st">شاراوە لای گشتی</span>':'')+'</b>'+
-          '<small>'+esc(l.url)+'</small></div>'+
-          '<div class="acts"><button class="btn ghost sm" onclick="delLink(\'need\','+i+')">🗑️</button></div></div>'}).join('');
-  }else{edC.style.display='none';edN.style.display='none'}
-  /* ئایکۆنەکان بۆ هەمووان — ناو لە ژێر ئایکۆن + لینک لەژێر ناو */
-  /* پەیوەندییەکان */
-  if(!CONTACTS.length){shC.innerHTML='<p class="hint">هێشتا هیچ پەیوەندییەک زیاد نەکراوە</p>'}
-  else{
-    shC.innerHTML=CONTACTS.map(l=>{
-      const t=SVG_ICONS[l.type]||'';
-      const href=l.type==='whatsapp'?'https://wa.me/'+l.url.replace(/[^0-9]/g,''):
-        l.type==='telegram'?'https://t.me/'+l.url.replace(/[^0-9a-zA-Z_@]/g,''):l.url;
-      return '<div class="iconitem">'+
-        '<a class="icononly" href="'+esc(href)+'" target="_blank" title="'+esc(l.name)+'">'+t+'</a>'+
-        '<span class="iconname">'+esc(l.name)+'</span>'+
-        '<a class="iconlink" href="'+esc(href)+'" target="_blank">'+esc(l.url)+'</a></div>'}).join('');
-  }
-  /* پێویستییەکان — فۆنتی پەروەردە لای گشتی شاراوە */
-  const visNeeds=NEEDS.filter(l=>!(l.type==='font'&&!isOwner));
-  if(!visNeeds.length){shN.innerHTML='<p class="hint">هێشتا هیچ پێویستییەک زیاد نەکراوە</p>'}
-  else{
-    shN.innerHTML=visNeeds.map(l=>{
-      const t=SVG_ICONS[l.type==='font'?'font':'download'];
-      const hidden=l.type==='font'&&!isOwner;
-      return '<div class="iconitem">'+
-        '<a class="icononly" href="'+(hidden?'javascript:void(0)':esc(l.url))+'" target="_blank" title="'+esc(l.name)+'">'+t+'</a>'+
-        '<span class="iconname">'+esc(l.name)+'</span>'+
-        (hidden?'':'<a class="iconlink" href="'+esc(l.url)+'" target="_blank">'+esc(l.url)+'</a>')+'</div>'}).join('');
-  }
-}
-async function addLink(kind){
-  if(!isOwner){toast('تەنها خاوەنی پرۆژە دەتوانێت لینک زیاد بکات','no');return}
-  if(kind==='contact'){
-    const name=lkName.value.trim(),url=lkUrl.value.trim(),type=lkType.value;
-    if(!name||!url){toast('ناوی پەیوەندی و ژمارە/لینکەکە بنووسە','no');return}
-    CONTACTS.push({name,url,type});
-    lkName.value='';lkUrl.value='';
-  }else{
-    const name=rqName.value.trim(),url=rqUrl.value.trim(),type=rqType.value;
-    if(!name||!url){toast('ناوی پێویستی و لینکەکە بنووسە','no');return}
-    NEEDS.push({name,url,type});
-    rqName.value='';rqUrl.value='';
-  }
-  await persistLinks();
-  renderLinks();
-  logAct('زیادکردنی لینک');toast('زیاد کرا')}
-async function delLink(kind,i){
-  if(!isOwner)return;
-  const list=kind==='contact'?CONTACTS:NEEDS;
-  const ok=await confirmBox('ئایە ڕازیت بە سڕینەوەی «'+list[i].name+'»؟');
-  if(!ok)return;
-  const nm=list[i].name;
-  list.splice(i,1);
-  await persistLinks();
-  renderLinks();
-  logAct('سڕینەوەی لینک: '+nm);toast('سڕدرایەوە','no')}
-async function persistLinks(){
-  if(!supa||!isOwner)return;
-  try{
-    ABOUT=ABOUT||{...ABOUT_DEF};
-    ABOUT.contacts=CONTACTS;ABOUT.needs=NEEDS;
-    await supa.from('pw_about').update({payload:ABOUT,updated_at:new Date().toISOString()}).eq('id',1);
-  }catch(e){toast('پاشەکەوتی لینکەکان سەرکەوتوو نەبوو','no')}
 }
 
 /* ================= سلاید داشبۆرد ================= */
@@ -1174,15 +1005,17 @@ const VIEWS=[
 const nav=document.getElementById('nav');
 VIEWS.forEach(v=>{const b=document.createElement('button');
   b.innerHTML=v.i+' <span>'+v.t+'</span>';b.dataset.v=v.id;b.onclick=()=>go(v.id);nav.appendChild(b)});
+
 /* لینکەکانی پەیوەندی و پێویستییەکان — پێش دەربارە */
 [['📎','پێویستییەکانی سیستەم','requirements.html'],
  ['💬','پەیوەندی لە ڕێگەی سۆشیال','social.html']].forEach(x=>{
   const a=document.createElement('a');
   a.href=x[2];
-  a.style.cssText='all:unset;display:flex;align-items:center;gap:9px;padding:10px 11px;border-radius:12px;cursor:pointer;color:var(--mut);font:inherit;font-size:14px;text-decoration:none;transition:.3s';
   a.innerHTML=x[0]+' <span>'+x[1]+'</span>';
-  nav.insertBefore(a,nav.querySelector('[data-v="about"]'));
+  const ab=nav.querySelector('[data-v="about"]');
+  if(ab)nav.insertBefore(a,ab);else nav.appendChild(a);
 });
+
 function go(id){
   if(id==='log'&&!isOwner)id='dash';
   curView=id;
@@ -1203,7 +1036,7 @@ function renderCurrent(){
   if(curView==='print')buildPrint();
   if(curView==='backup')renderBks();
   if(curView==='log')loadLog();
-  if(curView==='about'){renderAbout();renderLinks()}
+  if(curView==='about')renderAbout();
 }
 
 /* ================= کاتژمێر ================= */
@@ -1814,7 +1647,7 @@ async function wipeAll(){
   logAct('سفرکردنەوەی سیستەم');
   toast('سیستەم سفر کرایەوە');setTimeout(()=>location.reload(),700)}
 
-/* ================= نوێکردنەوەی ناوی قوتابخانە ================= */
+/* ================= نوێکردنەوەی ناوی قوتابخانە لە سلاید ================= */
 function updateBrand(){
   const sch=NAMES.sch||'پ';
   const mark=document.getElementById('brandMark');
@@ -1831,7 +1664,7 @@ function bootApp(){
     const lo=idb.get('logo_owner');lo&&lo.then(x=>{if(x)showLogo('owner',x)});
   }catch(e){}
   loadLocal();
-  loadNames();initDaySelects();renderDash();buildPrint();updateBrand();renderLinks();
+  loadNames();initDaySelects();renderDash();buildPrint();updateBrand();
   document.getElementById('syncLbl').textContent=supa?'✓ پەیوەست بە داتابەیس':'⚠ دۆخی ناوخۆیی';
 }
 (async()=>{

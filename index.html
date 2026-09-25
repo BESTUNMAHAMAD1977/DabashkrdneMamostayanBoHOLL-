@@ -519,10 +519,15 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
           <button class="btn ghost" onclick="fSize(1)">🔍➕ گەورەکردنی فۆنتی خانەکان</button>
           <button class="btn ghost" onclick="fSize(-1)">🔍➖ بچووککردنەوەی فۆنتی خانەکان</button>
           <span class="st" id="sizeLbl">قەبارە: ١٣</span>
+        </div>
+        <div class="rowflex">
+          <button class="btn ghost" onclick="iSize(1)">🔍➕ گەورەکردنی ناو و ژمارەکانی کارتەکان</button>
+          <button class="btn ghost" onclick="iSize(-1)">🔍➖ بچووککردنەوەی ناو و ژمارەکانی کارتەکان</button>
+          <span class="st" id="itemLbl">ئەندازەی کارت: ١.٠×</span>
           <button class="btn" onclick="doPrint()">🖨️ چاپکردن</button>
         </div>
         <p class="hint">سیستەم بە شێوەی زیرەکانە لاپەڕەکە گونجاند دەکات بۆ یەک لاپەڕەی A4 ئاسۆیی —
-        کارتەکانی ئامار خۆگونجاند دەکەن بۆ پڕکردنەوەی بۆشایی لاپەڕەکە و فۆنتی ناوەکان گەورە دەکرێن.</p>
+        کارتەکانی ئامار خۆگونجاند دەکەن بۆ پڕکردنەوەی بۆشایی لاپەڕەکە و دەتوانیت فۆنتی ناوەکان بە دەستی گەورە و بچووک بکەیت.</p>
       </div>
       <div class="card" id="printArea"></div>
     </section>
@@ -627,6 +632,7 @@ let teachers=[], halls=[], days=[], checks={}, assign={}, violations=[];
 let editT=null, editH=null;
 let logoMin='', logoSch='', NAMES={}, tsize=13, colored=false, curView='dash';
 let emailShown=false;
+let itemScale=1;
 
 /* ================= داتابەیس — Supabase ================= */
 const SUPA_URL='https://igvzbyjucwrjrrjwumrj.supabase.co';
@@ -1514,6 +1520,12 @@ function toggleColor(){colored=!colored;buildPrint();
   toast(colored?'ڕەنگکردن چالاک کرا':'ڕەنگکردن ناچالاک کرا')}
 function fSize(d){tsize=Math.max(9,Math.min(22,tsize+d));
   document.getElementById('sizeLbl').textContent='قەبارە: '+fa(tsize);buildPrint()}
+/* گەورەکردن و بچووککردنەوەی ناو و ژمارەکانی کارتەکانی فووتەر */
+function iSize(d){
+  itemScale=Math.max(0.7,Math.min(2.2,itemScale+d*0.1));
+  document.getElementById('itemLbl').textContent='ئەندازەی کارت: '+fa(itemScale.toFixed(1))+'×';
+  buildPrint();
+}
 function fitPrint(){
   const pa=document.getElementById('printArea');
   pa.style.zoom='';
@@ -1550,13 +1562,13 @@ function fitFooter(avail){
   const footTop=pf.offsetTop*z;
   const footH=pf.offsetHeight*z;
   /* بۆشایی ماوە لە کۆتایی فووتەر تا کۆتایی لاپەڕە */
-  let space=avail-(footTop+footH);
+  const space=avail-(footTop+footH);
   if(space<20)return;
   /* بەرزایی زیادە بۆ هەر کارتێک — بۆشاییەکە بە ٩٥٪ پڕ بکە */
   const extra=Math.min(space*.95,500);
-  /* فۆنتی ناوەکان گەورە بکە بەپێی بۆشایی — بەپێی ژمارەی خانەکان */
+  /* فۆنتی ناوەکان گەورە بکە بەپێی بۆشایی + ئەندازەی دەستکردی بەکارهێنەر */
   const baseFont=11;
-  const newFont=Math.min(baseFont+extra/40,22);
+  const newFont=Math.min((baseFont+extra/40)*itemScale,32);
   rows.forEach(r=>{
     r.style.fontSize=newFont+'px';
     const nm=r.querySelector('.nm');

@@ -4,12 +4,15 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>پەروەردە ٢٠٢٦ — سیستەمی دابەشکردنی مامۆستایان بۆ هۆڵەکانی تاقیکردنەوە</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 @font-face{font-family:"Parwarda2026";src:local("Parwarda2026"),local("Parwarda 2026")}
 :root{
-  --font:"Parwarda2026","Rabar","Noto Naskh Arabic",Tahoma,sans-serif;
+  --font:"Parwarda2026","Noto Kufi Arabic","Rabar","Noto Naskh Arabic",Tahoma,sans-serif;
   --bg:#f2f5fb;--panel:#ffffff;--ink:#16203a;--mut:#64748b;--line:#e2e8f0;
   --br:#0e7490;--br2:#06b6d4;--ok:#16a34a;--no:#dc2626;
   --r:16px;--sh:0 12px 32px rgba(15,23,42,.08)
@@ -1654,6 +1657,24 @@ function updateBrand(){
   mark.textContent=sch;
   mark.style.fontSize=sch.length>3?'10px':(sch.length>1?'13px':'22px');
 }
+
+/* ================= بارکردنی زووی فۆنتی سیستەم — بۆ پەڕەی چوونەژوورەوە ================= */
+(function(){
+  function openDb(){return new Promise((res,rej)=>{const r=indexedDB.open('pwdb',1);
+    r.onupgradeneeded=()=>r.result.createObjectStore('kv');
+    r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+  async function earlyFont(){
+    try{
+      const d=await openDb();
+      const f=await new Promise((res,rej)=>{
+        const t=d.transaction('kv','readonly');const q=t.objectStore('kv').get('font');
+        q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)});
+      if(f){const ff=new FontFace('Parwarda2026','url('+f+')');
+        await ff.load();document.fonts.add(ff)}
+    }catch(e){}
+  }
+  earlyFont();
+})();
 
 /* ================= هێنانەوە لە دەستپێکدا ================= */
 function bootApp(){

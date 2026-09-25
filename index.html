@@ -20,40 +20,39 @@ html.dark{
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);transition:background .3s,color .3s;font-family:var(--font)}
-/* ===== پەڕەی چوونەژوورەوە — دیزاینی نوێ ===== */
+/* ===== پەڕەی چوونەژوورەوە ===== */
 .authwrap{min-height:100vh;display:grid;place-items:center;padding:20px;position:relative;overflow:hidden;
   background:linear-gradient(135deg,#0e7490 0%,#06b6d4 50%,#0891b2 100%)}
-.authwrap::before,.authwrap::after{content:'';position:absolute;border-radius:50%;filter:blur(70px);opacity:.35}
-.authwrap::before{width:420px;height:420px;background:#22d3ee;top:-140px;inset-inline-start:-120px;animation:float1 9s ease-in-out infinite}
-.authwrap::after{width:380px;height:380px;background:#a5f3fc;bottom:-120px;inset-inline-end:-100px;animation:float2 11s ease-in-out infinite}
-@keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,40px)}}
-@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,-30px)}}
+.authwrap::before,.authwrap::after{content:'';position:absolute;border-radius:50%;filter:blur(90px);opacity:.28}
+.authwrap::before{width:460px;height:460px;background:#22d3ee;top:-160px;inset-inline-start:-140px;animation:float1 14s ease-in-out infinite}
+.authwrap::after{width:420px;height:420px;background:#a5f3fc;bottom:-150px;inset-inline-end:-120px;animation:float2 17s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(18px,22px)}}
+@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(-22px,-16px)}}
 .authcard{background:rgba(255,255,255,.97);border-radius:24px;box-shadow:0 24px 70px rgba(2,20,40,.35);
   padding:34px 28px;width:min(94vw,430px);text-align:center;position:relative;z-index:2;
-  animation:pop .5s cubic-bezier(.2,.9,.3,1.2)}
-@keyframes pop{from{opacity:0;transform:translateY(26px) scale(.96)}to{opacity:1;transform:none}}
+  animation:pop .4s ease-out}
+@keyframes pop{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 .authcard .mark{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;margin:0 auto 14px;
   background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;font-size:32px;font-weight:800;
-  box-shadow:0 10px 26px rgba(6,182,212,.45);animation:markPulse 3s ease-in-out infinite}
-@keyframes markPulse{0%,100%{box-shadow:0 10px 26px rgba(6,182,212,.45)}50%{box-shadow:0 10px 34px rgba(6,182,212,.75)}}
+  box-shadow:0 10px 26px rgba(6,182,212,.4)}
 .authcard h2{margin:0 0 4px;font-size:24px;background:linear-gradient(135deg,var(--br),var(--br2));
   -webkit-background-clip:text;background-clip:text;color:transparent}
 .authcard .sub{color:#64748b;font-size:13px;margin:0 0 18px}
 .authcard .tabs{display:flex;gap:6px;margin:0 0 16px;background:#eef4f8;border-radius:14px;padding:5px}
 .authcard .tabs button{all:unset;flex:1;cursor:pointer;font:inherit;padding:10px;border-radius:10px;
-  color:#64748b;text-align:center;font-weight:700;transition:.25s}
+  color:#64748b;text-align:center;font-weight:700;transition:.3s}
 .authcard .tabs button.on{background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;
-  box-shadow:0 6px 16px rgba(6,182,212,.4)}
+  box-shadow:0 6px 16px rgba(6,182,212,.35)}
 .afield{position:relative;margin-bottom:14px;text-align:start}
 .afield input{width:100%;padding:13px 44px 13px 14px;border:2px solid #dfe8f0;border-radius:14px;
-  background:#f8fbfd;font:inherit;font-size:15px;color:#16203a;transition:.25s;outline:none}
-.afield input:focus{border-color:var(--br2);background:#fff;box-shadow:0 0 0 4px rgba(6,182,212,.15)}
+  background:#f8fbfd;font:inherit;font-size:15px;color:#16203a;transition:border-color .3s,box-shadow .3s;outline:none}
+.afield input:focus{border-color:var(--br2);background:#fff;box-shadow:0 0 0 4px rgba(6,182,212,.12)}
 .afield .ic{position:absolute;inset-inline-end:13px;top:50%;transform:translateY(-50%);font-size:17px;pointer-events:none}
 .afield .eye{pointer-events:auto;cursor:pointer;user-select:none}
 #authBtn{width:100%;padding:13px;border:none;border-radius:14px;cursor:pointer;font:inherit;font-size:16px;
   font-weight:800;color:#fff;background:linear-gradient(135deg,var(--br),var(--br2));
-  box-shadow:0 10px 24px rgba(6,182,212,.45);transition:.25s}
-#authBtn:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(6,182,212,.6)}
+  box-shadow:0 10px 24px rgba(6,182,212,.4);transition:transform .3s,box-shadow .3s}
+#authBtn:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(6,182,212,.55)}
 #authBtn:disabled{opacity:.6;cursor:wait;transform:none}
 #authMsg{min-height:24px;margin-top:12px;font-weight:700;font-size:13.5px}
 #authMsg.ok{color:var(--ok)}#authMsg.no{color:var(--no)}
@@ -73,7 +72,7 @@ body{margin:0;background:var(--bg);color:var(--ink);transition:background .3s,co
 .userbox .role.owner{background:rgba(22,163,74,.15);color:var(--ok)}
 .nav{display:flex;flex-direction:column;gap:5px;flex:1;overflow-y:auto}
 .nav button{all:unset;display:flex;align-items:center;gap:9px;padding:10px 11px;border-radius:12px;
-  cursor:pointer;color:var(--mut);font:inherit;font-size:14px;transition:.2s}
+  cursor:pointer;color:var(--mut);font:inherit;font-size:14px;transition:.3s}
 .nav button:hover{background:rgba(6,182,212,.12);color:var(--ink)}
 .nav button.on{background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;font-weight:700}
 .foot{font-size:11px;color:var(--mut);padding:10px;border-top:1px solid var(--line)}
@@ -86,31 +85,31 @@ body{margin:0;background:var(--bg);color:var(--ink);transition:background .3s,co
   box-shadow:var(--sh);font-weight:700;font-variant-numeric:tabular-nums}
 .sync{font-size:12px;color:var(--mut);font-weight:700}
 .view{display:none}
-.view.on{display:block;animation:in .35s ease}
-@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.view.on{display:block;animation:in .3s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
-/* ===== کارتەکان — فلیکسی نەرم + تیشکی جوان ===== */
+/* ===== کارتەکان — نەرم و هێواش ===== */
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
   padding:18px;margin-bottom:14px;position:relative;
-  transition:transform .25s cubic-bezier(.2,.9,.3,1.2),box-shadow .25s}
+  transition:transform .45s ease,box-shadow .45s ease}
 .card::after{content:'';position:absolute;inset:0;border-radius:var(--r);pointer-events:none;
-  box-shadow:0 0 0 0 rgba(6,182,212,0);transition:box-shadow .35s}
-.card:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(6,182,212,.18)}
-.card:hover::after{box-shadow:0 0 0 3px rgba(6,182,212,.22)}
+  box-shadow:0 0 0 0 rgba(6,182,212,0);transition:box-shadow .5s ease}
+.card:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(6,182,212,.14)}
+.card:hover::after{box-shadow:0 0 0 3px rgba(6,182,212,.16)}
 .card h2{margin:0 0 10px;font-size:17px}
 .card p{color:var(--mut);margin:0 0 10px;line-height:1.9;font-size:14px}
 .big{font-size:30px;font-weight:800;color:var(--br);margin-top:6px}
 .btn{all:unset;display:inline-block;cursor:pointer;font:inherit;font-weight:700;padding:10px 18px;
   border-radius:12px;color:#fff;background:linear-gradient(135deg,var(--br),var(--br2));box-shadow:var(--sh);
-  transition:transform .2s,box-shadow .2s}
-.btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(6,182,212,.4)}
-.btn:active{transform:translateY(0) scale(.97)}
+  transition:transform .35s ease,box-shadow .35s ease}
+.btn:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(6,182,212,.35)}
+.btn:active{transform:translateY(0) scale(.98)}
 .btn.ghost{background:none;color:var(--ink);border:1px solid var(--line);box-shadow:none}
-.btn.ghost:hover{background:rgba(6,182,212,.08);border-color:var(--br2)}
+.btn.ghost:hover{background:rgba(6,182,212,.07);border-color:var(--br2)}
 .btn.sm{padding:6px 10px;font-size:13px}
 .inp{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:transparent;
-  color:var(--ink);font:inherit;margin:4px 0 10px;transition:border-color .2s,box-shadow .2s}
-.inp:focus{outline:none;border-color:var(--br2);box-shadow:0 0 0 3px rgba(6,182,212,.12)}
+  color:var(--ink);font:inherit;margin:4px 0 10px;transition:border-color .3s,box-shadow .3s}
+.inp:focus{outline:none;border-color:var(--br2);box-shadow:0 0 0 3px rgba(6,182,212,.1)}
 .inp.sm{width:auto;min-width:120px;margin:0}
 .sel{padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);font:inherit}
 .lbl{display:block;color:var(--mut);font-size:13px;margin-top:6px}
@@ -173,13 +172,13 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
   backdrop-filter:blur(3px)}
 #mask.on{display:grid}
 #mask .box{background:var(--panel);border-radius:var(--r);padding:22px;width:min(92vw,380px);
-  box-shadow:var(--sh);text-align:center;animation:in .25s ease}
+  box-shadow:var(--sh);text-align:center;animation:in .3s ease}
 #mask b{display:block;margin-bottom:16px;font-size:17px;line-height:1.8}
 #mask .row{display:flex;gap:10px;justify-content:center}
 #toast{position:fixed;bottom:18px;inset-inline-start:18px;z-index:60;display:flex;flex-direction:column;gap:8px}
 .tst{background:var(--panel);border:1px solid var(--line);border-inline-start:5px solid var(--ok);
-  border-radius:12px;padding:10px 16px;box-shadow:var(--sh);font-weight:700;animation:tin .3s ease;max-width:420px}
-@keyframes tin{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:none}}
+  border-radius:12px;padding:10px 16px;box-shadow:var(--sh);font-weight:700;animation:tin .4s ease;max-width:420px}
+@keyframes tin{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
 .tst.no{border-inline-start-color:var(--no)}
 @media print{
   @page{size:A4 landscape;margin:8mm}
@@ -222,8 +221,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
     </div>
     <button id="authBtn">چوونەژوورەوە</button>
     <div id="authMsg"></div>
-    <p class="authnote">🔐 هەر بەکارهێنەرێک داتای تایبەتی خۆی هەیە — داتاکان بە ئیمەیڵ جیا دەکرێنەوە.<br>
-    👑 یەکەم کەس کە تۆمار دەکات دەبێتە خاوەنی پرۆژە</p>
+    <p class="authnote">🔐 هەر بەکارهێنەرێک داتای تایبەتی خۆی هەیە — داتاکان بە ئیمەیڵ جیا دەکرێنەوە</p>
   </div>
 </div>
 
@@ -313,7 +311,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
       </div>
       <div class="card">
         <h2>لۆگۆکان — تەنها فۆرماتی پی ئێن جی</h2>
-        <p>لۆگۆکان بە ئاسانی بگۆڕە یان بسڕەوە — هەر کاتێک لە هەمان بەشدەوە.</p>
+        <p>لۆگۆکان بە ئاسانی بگۆڕە یان بسڕەوە — گۆڕانکارییەکان لە داتابەیسدا پاشەکەوت دەکرێن و بۆ هەموو بەکارهێنەران دەگەن.</p>
         <div class="logos">
           <div class="logoBox">
             <div class="ph" id="ph_min">لۆگۆی وەزارەتی پەروەردە</div>
@@ -515,7 +513,9 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
             <button class="btn ghost sm" onclick="clearLog()" style="color:var(--no)">🗑️ سڕینەوەی هەموو تۆمارەکان</button>
           </div>
         </div>
-        <p class="hint">هەموو کردارەکانی هەموو بەکارهێنەران بە ئیمەیڵی ئەنجامدەر و کات تۆمار دەکرێن.</p>
+        <p class="hint">هەموو کردارەکانی هەموو بەکارهێنەران بە ئیمەیڵی ئەنجامدەر و کات تۆمار دەکرێن.
+        <b>تێبینی:</b> سڕینەوەیەک تەنها تۆمارەکان لادەبات — داتای مامۆستایان و هۆڵەکان و گۆڕانکارییەکانی
+        بەکارهێنەرانی تر بە تەواوی دەمێننەوە.</p>
         <div class="tblwrap"><table class="tbl" id="logTbl"></table></div>
       </div>
     </section>
@@ -630,7 +630,6 @@ tabLogin.onclick=()=>{authMode='login';tabLogin.classList.add('on');tabSignup.cl
 tabSignup.onclick=()=>{authMode='signup';tabSignup.classList.add('on');tabLogin.classList.remove('on');
   authBtn.textContent='تۆمارکردنی نوێ';authMsg.textContent=''};
 
-/* بینینی وشەی نهێنی */
 eyeBtn.onclick=()=>{
   const isPass=aPass.type==='password';
   aPass.type=isPass?'text':'password';
@@ -955,7 +954,7 @@ document.getElementById('themeBtn').onclick=()=>{
   localStorage.setItem('pwdark',dark?'1':'0')};
 if(localStorage.getItem('pwdark')==='1')document.documentElement.classList.add('dark');
 
-/* ================= دەنگ — یەک جار بۆ هەر کردارێک ================= */
+/* ================= دەنگ — نەرم و یەک جار ================= */
 let audioCtx=null;
 function getCtx(){
   if(!audioCtx){
@@ -972,12 +971,22 @@ function beep(ok){
   try{
     const o=c.createOscillator(),g=c.createGain();
     o.connect(g);g.connect(c.destination);
-    o.type=ok?'sine':'square';
-    if(ok){o.frequency.setValueAtTime(660,c.currentTime);o.frequency.setValueAtTime(880,c.currentTime+.12)}
-    else o.frequency.setValueAtTime(200,c.currentTime);
-    g.gain.setValueAtTime(.15,c.currentTime);
-    g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.35);
-    o.start();o.stop(c.currentTime+.4);
+    o.type='sine';
+    if(ok){
+      /* دەنگی نەرمی سەرکەوتن — دوو تۆنی کورت و نەرم */
+      o.frequency.setValueAtTime(520,c.currentTime);
+      o.frequency.setValueAtTime(700,c.currentTime+.1);
+      g.gain.setValueAtTime(0,c.currentTime);
+      g.gain.linearRampToValueAtTime(.1,c.currentTime+.03);
+      g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.3);
+      o.start();o.stop(c.currentTime+.32);
+    }else{
+      o.frequency.setValueAtTime(220,c.currentTime);
+      g.gain.setValueAtTime(0,c.currentTime);
+      g.gain.linearRampToValueAtTime(.09,c.currentTime+.03);
+      g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.3);
+      o.start();o.stop(c.currentTime+.32);
+    }
   }catch(e){}
 }
 function toast(msg,kind){
@@ -1166,7 +1175,7 @@ async function clearDays(){
   renderDays();renderExams();renderSup();renderDash();
   logAct('سڕینەوەی هەموو ڕۆژ و ڕێکەوتەکان');toast('هەموو ڕۆژ و ڕێکەوتەکان سڕدرانەوە','no')}
 
-/* ================= دیاریکردنی خشتە — چێک بۆکس بۆ هەمووان ئازاد ================= */
+/* ================= دیاریکردنی خشتە — چێک بۆکس بۆ هەمووان ئازاد + دەنگی نەرم ================= */
 function renderExams(){const t=document.getElementById('examTbl');
   if(!teachers.length||!days.length){
     t.innerHTML='<tr><td class="hint">'+
@@ -1182,9 +1191,10 @@ function renderExams(){const t=document.getElementById('examTbl');
     h+='</tr>'});
   h+='</tbody>';t.innerHTML=h}
 function togCheck(tid,did,v){
-  /* چێک بۆکس بۆ هەموو مامۆستایان ئازادە — بێ سنوور */
   if(v){
     checks[tid+'|'+did]=1;
+    /* دەنگی نەرمی سەرکەوتن بۆ هەڵبژاردنی چێک بۆکس */
+    beepSoftOk();
     Object.keys(assign).forEach(k=>{
       if(k.startsWith(did+'|')){
         assign[k]=assign[k].filter(x=>x!==tid);
@@ -1193,13 +1203,8 @@ function togCheck(tid,did,v){
     logAct('چێککردنی مامۆستا: '+teacherName(tid)+' بۆ '+dayLabel(did));
   }else{
     delete checks[tid+'|'+did];
-    logAct('لابردنی چێکی مامۆستا: '+teacherName(tid)+' لە '+dayLabel(did));
   }
   save();renderExams();renderSup();renderDash()}
-async function clearChecks(){if(!Object.keys(checks).length){toast('هەڵبژاردنێک نییە','no');return}
-  const ok=await confirmBox('ئایە ڕازیت بە سڕینەوەی هەموو چێک بۆکسەکان؟');
-  if(!ok)return;checks={};save();renderExams();
-  logAct('سڕینەوەی هەموو چێک بۆکسەکان');toast('هەڵبژاردنەکان سڕدرانەوە','no')}
 
 /* ================= دابەشکردنی خۆکار ================= */
 const R1='نەبوونی مامۆستای ئازاد بۆ پڕکردنەوەی خانە — شکاندنی یاسای دوو باری بەدوای یەکدا لە هەمان هۆڵدا';
@@ -1312,7 +1317,7 @@ async function clearViolations(){
   if(!ok)return;
   violations=[];save();renderViol();toast('تۆمارەکان سڕدرانەوە','no')}
 
-/* ================= تۆماری کردارەکان — بە سڕینەوە ================= */
+/* ================= تۆماری کردارەکان — سڕینەوەی ڕیز بە ڕیز ================= */
 let logRows=[];
 async function loadLog(){
   if(!isOwner||!supa)return;
@@ -1336,13 +1341,19 @@ async function loadLog(){
 }
 async function clearLog(){
   if(!isOwner||!supa)return;
-  const ok=await confirmBox('ئایە ڕازیت بە سڕینەوەی هەموو تۆمارەکانی کردارەکان؟ ئەمە ناگەڕێتەوە');
+  const ok=await confirmBox('ئایە ڕازیت بە سڕینەوەی هەموو تۆمارەکانی کردارەکان؟ — داتای مامۆستایان و گۆڕانکارییەکانی بەکارهێنەرانی تر دەمێننەوە');
   if(!ok)return;
   try{
-    await supa.from('pw_log').delete().neq('id',0);
+    /* سڕینەوەی ڕیز بە ڕیز — بەپێی سیستەمی RLS */
+    const{data:all}=await supa.from('pw_log').select('id');
+    if(all&&all.length){
+      for(const r of all){
+        await supa.from('pw_log').delete().eq('id',r.id);
+      }
+    }
     logAct('سڕینەوەی هەموو تۆمارەکانی کردارەکان');
     toast('هەموو تۆمارەکان سڕدرانەوە');loadLog();
-  }catch(e){toast('سڕینەوە سەرکەوتوو نەبوو','no')}
+  }catch(e){toast('سڕینەوە سەرکەوتوو نەبوو — پۆلیسی سڕینەوە لە داتابەیسدا زیاد بکە','no')}
 }
 
 /* ================= چاپکردن ================= */
@@ -1510,6 +1521,25 @@ async function wipeAll(){
   }
   logAct('سفرکردنەوەی سیستەم');
   toast('سیستەم سفر کرایەوە');setTimeout(()=>location.reload(),700)}
+
+/* ================= دەنگی نەرم بۆ چێک بۆکس ================= */
+function beepSoftOk(){
+  const now=Date.now();
+  if(now-soundLock<200)return;
+  soundLock=now;
+  const c=getCtx();if(!c)return;
+  try{
+    const o=c.createOscillator(),g=c.createGain();
+    o.connect(g);g.connect(c.destination);
+    o.type='sine';
+    o.frequency.setValueAtTime(660,c.currentTime);
+    o.frequency.setValueAtTime(880,c.currentTime+.08);
+    g.gain.setValueAtTime(0,c.currentTime);
+    g.gain.linearRampToValueAtTime(.08,c.currentTime+.03);
+    g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.25);
+    o.start();o.stop(c.currentTime+.27);
+  }catch(e){}
+}
 
 /* ================= هێنانەوە لە دەستپێکدا ================= */
 function bootApp(){

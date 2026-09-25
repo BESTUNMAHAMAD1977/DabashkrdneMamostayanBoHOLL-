@@ -39,11 +39,12 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font)}
 .fb{background:linear-gradient(135deg,#1877f2,#0c5fd1)}
 .item .nm{margin-top:9px;font-size:13.5px;font-weight:700}
 /* چات */
-.chatbox{display:flex;flex-direction:column;height:460px}
-.cstatus{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;margin-bottom:10px}
+.chatbox{display:flex;flex-direction:column;height:480px}
+.cstatus{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;margin-bottom:10px;flex-wrap:wrap}
 .dot{width:12px;height:12px;border-radius:50%;display:inline-block}
 .dot.on{background:var(--ok);box-shadow:0 0 8px rgba(22,163,74,.6)}
 .dot.off{background:var(--no);box-shadow:0 0 8px rgba(220,38,38,.5)}
+.usel{padding:7px 10px;border:1px solid var(--line);border-radius:10px;font:inherit;background:var(--panel);color:var(--ink);max-width:260px}
 .msgs{flex:1;overflow-y:auto;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--bg);display:flex;flex-direction:column;gap:8px}
 .msg{max-width:75%;padding:8px 14px;border-radius:14px;font-size:14px;line-height:1.8;word-break:break-word}
 .msg.me{align-self:flex-start;background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;border-bottom-right-radius:4px}
@@ -105,7 +106,10 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font)}
     <div class="card">
       <h2>💬 چات لەگەڵ دیڤلۆپەر</h2>
       <div class="chatbox">
-        <div class="cstatus"><span class="dot off" id="devDot"></span><span id="devStat">دۆخی دیڤلۆپەر دەپشکنرێت...</span></div>
+        <div class="cstatus">
+          <span class="dot off" id="devDot"></span><span id="devStat">دۆخی دیڤلۆپەر دەپشکنرێت...</span>
+          <select class="usel" id="userSel" style="display:none" onchange="loadChat()"></select>
+        </div>
         <div class="msgs" id="msgs"></div>
         <div class="emoji" id="emojiBox"></div>
         <div class="cinput">
@@ -125,7 +129,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font)}
 const SUPA_URL='https://igvzbyjucwrjrrjwumrj.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlndnpieWp1Y3dyanJyand1bXJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMjg4MjYsImV4cCI6MjEwNTkwNDgyNn0.vvKxUiFA79ZzvkHJ3lc8WymX5ACRLIkgbKo8c2XezIQ';
 const supa=supabase.createClient(SUPA_URL,SUPA_KEY);
-let me=null,isOwner=false,SOCIAL=null,lastMsgId=0;
+let me=null,isOwner=false,SOCIAL=null,curUser=null,nameCache={};
 
 const SVG={
   wa:'<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>',
@@ -139,20 +143,54 @@ function toast(m,k){const t=document.createElement('div');
   t.textContent=m;document.getElementById('toast').appendChild(t);setTimeout(()=>t.remove(),3500)}
 function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
+/* ===== فۆنتی سیستەم — هەمان فۆنتی پەروەردە ٢٠٢٦ ===== */
+function openIdb(){return new Promise((res,rej)=>{const r=indexedDB.open('pwdb',1);
+  r.onupgradeneeded=()=>r.result.createObjectStore('kv');
+  r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+function idbGet(k){return openIdb().then(d=>new Promise((res,rej)=>{
+  const t=d.transaction('kv','readonly');const q=t.objectStore('kv').get(k);
+  q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})).catch(()=>null)}
+async function loadFF(url){try{const f=new FontFace('Parwarda2026','url('+url+')');
+  await f.load();document.fonts.add(f)}catch(e){}}
+async function loadSysFont(){
+  try{const f=await idbGet('font');if(f){await loadFF(f);return}}catch(e){}
+  try{const{data:row}=await supa.from('pw_data').select('payload').eq('email',me.email).maybeSingle();
+    if(row?.payload?.font)await loadFF(row.payload.font)}catch(e){}
+}
+
+/* ===== دەنگی ناردنی چات — وەک واتس ئاپ ===== */
+let audioCtx=null;
+function sentSound(){
+  try{
+    audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+    const c=audioCtx,o=c.createOscillator(),g=c.createGain();
+    o.connect(g);g.connect(c.destination);
+    o.type='sine';
+    o.frequency.setValueAtTime(880,c.currentTime);
+    o.frequency.exponentialRampToValueAtTime(1245,c.currentTime+.09);
+    g.gain.setValueAtTime(0,c.currentTime);
+    g.gain.linearRampToValueAtTime(.18,c.currentTime+.02);
+    g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.22);
+    o.start();o.stop(c.currentTime+.24);
+  }catch(e){}
+}
+
 supa.auth.onAuthStateChange(async(ev,s)=>{
   if(s?.user){me=s.user;await start()}else{document.getElementById('authScreen').style.display=''}
 });
 async function start(){
   document.getElementById('authScreen').style.display='none';
   document.getElementById('appMain').style.display='';
+  await loadSysFont();
   try{const{data:p}=await supa.from('pw_profiles').select('role').eq('id',me.id).maybeSingle();
     isOwner=p?.role==='owner'}catch(e){isOwner=false}
   document.getElementById('uRole').textContent=isOwner?'👑 خاوەنی پرۆژە':'بەکارهێنەری گشتی';
   document.getElementById('editBox').style.display=isOwner?'':'none';
-  /* هەڵگرتی هەناسە — بۆ دۆخی ئۆنلاین */
+  if(isOwner)document.getElementById('userSel').style.display='';
   heartbeat();setInterval(heartbeat,30000);
   await loadSocial();
   renderSocial();
+  await loadChatUsers();
   loadChat();setInterval(loadChat,3000);
 }
 async function heartbeat(){
@@ -186,7 +224,8 @@ function renderSocial(){
   if(SOCIAL.facebook)h+='<div class="item"><a class="fb" href="'+esc(SOCIAL.facebook)+'" target="_blank" title="فەیسبووک">'+SVG.fb+'</a><span class="nm">فەیسبووک</span></div>';
   sh.innerHTML=h;
 }
-/* ================= چات ================= */
+
+/* ================= چات — هەر بەکارهێنەر چاتی تایبەتی خۆی ================= */
 const EMOJI_LIST=EMOJIS.match(/./gu);
 function toggleEmoji(){
   const b=document.getElementById('emojiBox');
@@ -196,30 +235,67 @@ function toggleEmoji(){
   b.classList.toggle('on');
 }
 function addEmoji(e){chatIn.value+=e;chatIn.focus()}
+
+/* ناوی قوتابخانە یان ئیمەیڵ — بۆ دیڤلۆپەر */
+async function userName(u){
+  if(nameCache[u])return nameCache[u];
+  try{
+    const{data:row}=await supa.from('pw_data').select('payload').eq('email',u).maybeSingle();
+    const sch=row?.payload?.names?.sch;
+    nameCache[u]=(sch&&String(sch).trim())?sch:u;
+  }catch(e){nameCache[u]=u}
+  return nameCache[u];
+}
+
+async function loadChatUsers(){
+  if(!isOwner)return;
+  try{
+    const{data}=await supa.from('pw_chat').select('user_email').order('id',{ascending:false}).limit(500);
+    const set=[...new Set((data||[]).map(m=>m.user_email).filter(Boolean))];
+    for(const u of set)await userName(u);
+    const sel=document.getElementById('userSel');
+    const prev=curUser;
+    sel.innerHTML=set.map(u=>'<option value="'+esc(u)+'">'+esc(nameCache[u])+'</option>').join('');
+    if(set.length){
+      curUser=(prev&&set.includes(prev))?prev:set[0];
+      sel.value=curUser;
+    }else{curUser=null}
+  }catch(e){}
+}
+
 async function sendMsg(){
   const txt=chatIn.value.trim();
   if(!txt)return;
+  const target=isOwner?curUser:me.email;
+  if(!target){toast('هێشتا هیچ چاتێک نییە','no');return}
   try{
-    await supa.from('pw_chat').insert({sender:me.email,message:txt});
+    await supa.from('pw_chat').insert({sender:me.email,user_email:target,message:txt});
     chatIn.value='';document.getElementById('emojiBox').classList.remove('on');
+    sentSound();
     loadChat();
   }catch(e){toast('ناردنی پەیام سەرکەوتوو نەبوو','no')}
 }
 async function loadChat(){
   try{
-    const{data}=await supa.from('pw_chat').select('*').order('id',{ascending:true}).limit(300);
+    let q=supa.from('pw_chat').select('*').order('id',{ascending:true}).limit(300);
+    /* هەر بەکارهێنەر تەنها چاتی خۆی — دیڤلۆپەر چاتی بەکارهێنەری هەڵبژێردراو */
+    q=isOwner?q.eq('user_email',curUser||'___none___'):q.eq('user_email',me.email);
+    const{data}=await q;
     const msgs=(data||[]);
-    if(msgs.length&&msgs[msgs.length-1].id===lastMsgId&&document.getElementById('msgs').childElementCount)return;
     const box=document.getElementById('msgs');
     box.innerHTML=msgs.map(m=>{
       const isMe=m.sender===me.email;
+      /* نیشاندانی ناو: دیڤلۆپەر بێ ئیمەیڵ — بەکارهێنەر بە ناوی قوتابخانە */
+      let who;
+      if(isMe)who='تۆ';
+      else if(isOwner)who=nameCache[m.sender]||m.sender;
+      else who='دیڤلۆپەر';
       const d=new Date(m.created_at);
       const tm=String(d.getHours()%12||12).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+(d.getHours()>=12?' PM':' AM');
       return '<div class="msg '+(isMe?'me':'them')+'">'+
-        '<span class="who">'+esc(isMe?'تۆ':(m.sender||'—'))+' — '+tm+'</span>'+
+        '<span class="who">'+esc(who)+' — '+tm+'</span>'+
         esc(m.message)+'</div>'}).join('');
     box.scrollTop=box.scrollHeight;
-    if(msgs.length)lastMsgId=msgs[msgs.length-1].id;
   }catch(e){}
   /* دۆخی دیڤلۆپەر */
   try{

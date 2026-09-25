@@ -176,7 +176,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
     <input class="inp" id="aPass" type="password" placeholder="وشەی نهێنی (لانیکەم ٦ پیت) ...">
     <button class="btn" id="authBtn" style="width:100%">چوونەژوورەوە</button>
     <div id="authMsg"></div>
-    <p class="hint" style="margin-top:14px;margin-bottom:0">یەکەم کەس کە تۆمار دەکات دەبێتە خاوەنی پرۆژە</p>
+    <p class="hint" style="margin-top:14px;margin-bottom:0">هەر بەکارهێنەرێک داتای تایبەتی خۆی هەیە — داتاکان بە ئیمەیڵ جیا دەکرێنەوە</p>
   </div>
 </div>
 
@@ -368,7 +368,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
             <button class="btn ghost sm" onclick="clearChecks()">🗑️ سڕینەوەی هەڵبژاردنەکان</button>
           </div>
         </div>
-        <p class="hint"><span class="warn">مەرجی قوڕس:</span> مامۆستایەک کە چێک بۆکسی بۆ ڕۆژێک دیاری کراوە، لە خشتەی چاودێری هۆڵەکانی ئەو ڕۆژەدا دانانرێت — مامۆستای چێک نەکراو دادەنرێت. کاتی چێککردن، ناوەکە ڕاستەوخۆ لە خشتەکە لادەبرێت و چێکەکە بۆ ئەو ڕۆژەی دیاریکراوە دەمێنێتەوە. (لە حاڵەتی کەمیی تونددا، بۆ نەبەتاڵبوونی خانە، بە شکاندنی ئەم مەرجە دادەنرێت و لە تۆماری پێشێلکردنەکاندا تۆمار دەکرێت.)</p>
+        <p class="hint"><span class="warn">یاسای چێک بۆکس:</span> بۆ هەر ڕۆژێک تەنها <b>یەک مامۆستا</b> دەکرێت چێک بکرێت — کاتێک مامۆستایەک چێک بکرێت، ناتوانرێت مامۆستایەکی تر بۆ هەمان ڕۆژ چێک بکرێت. هەروەها <b>مەرجی قوڕس</b>: مامۆستای چێککراو لە خشتەی چاودێری هۆڵەکان دانانرێت. (لە حاڵەتی کەمیی تونددا بە شکاندنی ئەم مەرجە دادەنرێت و لە تۆماری پێشێلکردنەکاندا تۆمار دەکرێت.)</p>
         <div class="tblwrap"><table class="tbl" id="examTbl"></table></div>
       </div>
     </section>
@@ -450,7 +450,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
       </div>
       <div class="card">
         <h2>🗑️ سفرکردنەوەی سیستەم</h2>
-        <p>هەموو داتاکان دەسڕدرێنەوە و سیستەم دەگەڕێتەوە دۆخی سەرەتا — پێش سفرکردنەوە، باکئەپ دروست بکە.</p>
+        <p>هەموو داتاکانی ئیمەیڵەکەت دەسڕدرێنەوە و سیستەم دەگەڕێتەوە دۆخی سەرەتا — پێش سفرکردنەوە، باکئەپ دروست بکە.</p>
         <button class="btn ghost" onclick="wipeAll()" style="color:var(--no);border-color:var(--no)">🗑️ سفرکردنەوەی سیستەم</button>
       </div>
     </section>
@@ -518,12 +518,7 @@ const LS={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v??d}c
           set(k,v){localStorage.setItem(k,JSON.stringify(v))}};
 const uid=p=>p+Date.now().toString(36)+Math.floor(Math.random()*999);
 
-let teachers=LS.get('pw_teachers',[]);
-let halls=LS.get('pw_halls',[]);
-let days=LS.get('pw_days',[]);
-let checks=LS.get('pw_checks',{});
-let assign=LS.get('pw_assign',{});
-let violations=LS.get('pw_violations',[]);
+let teachers=[], halls=[], days=[], checks={}, assign={}, violations=[];
 let editT=null, editH=null;
 let logoMin='', logoSch='', NAMES={}, tsize=13, colored=false, curView='dash';
 
@@ -538,9 +533,21 @@ const ABOUT_DEF={name:'بێستون محمد ئەحمەد',job:'مامۆستا',
   ph1:'٠٧٥٠١٩٩٨٦٧٥',ph2:'٠٧٧٠١٩٩٨٦٧٥',
   rights:'ئەم سیستەمە تایبەتە بە خاوەنەکەی؛ تەنها بۆ خزمەتی کەرتی پەروەردە بەخۆڕایی پێشکەش دەکرێت و فرۆشتنی قەدەغەیە.'};
 
-const save=()=>{LS.set('pw_teachers',teachers);LS.set('pw_halls',halls);
-  LS.set('pw_days',days);LS.set('pw_checks',checks);LS.set('pw_assign',assign);
-  LS.set('pw_violations',violations);markDirty()};
+/* ================= یەکەی داتا — بەپێی ئیمەیڵ ================= */
+function dataKey(){return me?(me.email||'local'):'local'}
+/* پاشەکەوتی ناوخۆیی — بەپێی ئیمەیڵ تا داتای بەکارهێنەران تێکەڵ نەبن */
+function lsKey(k){return k+'_'+(dataKey().replace(/[^a-zA-Z0-9]/g,'_'))}
+const save=()=>{LS.set(lsKey('pw_teachers'),teachers);LS.set(lsKey('pw_halls'),halls);
+  LS.set(lsKey('pw_days'),days);LS.set(lsKey('pw_checks'),checks);LS.set(lsKey('pw_assign'),assign);
+  LS.set(lsKey('pw_violations'),violations);markDirty()};
+function loadLocal(){
+  teachers=LS.get(lsKey('pw_teachers'),[]);
+  halls=LS.get(lsKey('pw_halls'),[]);
+  days=LS.get(lsKey('pw_days'),[]);
+  checks=LS.get(lsKey('pw_checks'),{});
+  assign=LS.get(lsKey('pw_assign'),{});
+  violations=LS.get(lsKey('pw_violations'),[]);
+}
 
 function fmtD(s){const p=s.split('-').map(Number);const dt=new Date(p[0],p[1]-1,p[2]);
   return{txt:fa(p[2])+'/'+fa(p[1])+'/'+fa(p[0]),wd:WD[dt.getDay()]}}
@@ -602,7 +609,7 @@ if(supa){
     else{me=null;isOwner=false;authScreen.style.display='';appMain.style.display='none'}
   });
 }else{
-  me={email:'بەکارهێنەری ناوخۆیی'};isOwner=true;
+  me={email:'local'};isOwner=true;
   authScreen.style.display='none';appMain.style.display='';bootApp();
 }
 
@@ -622,19 +629,20 @@ async function startApp(){
   await loadCloud();
 }
 
-/* ================= هاوکاتی داتابەیس ================= */
+/* ================= هاوکاتی داتابەیس — ڕیز بەپێی ئیمەیڵ ================= */
 async function loadCloud(){
   if(!supa||!me)return;
   const s=document.getElementById('syncLbl');
+  const email=dataKey();
   try{
     s.textContent='⏳ گەڕانەوەی داتاکان...';
-    const{data:row}=await supa.from('pw_data').select('payload').eq('id',1).maybeSingle();
+    /* داتای تایبەتی ئەم بەکارهێنەرە — بە ئیمەیڵی خۆی */
+    const{data:row}=await supa.from('pw_data').select('payload').eq('email',email).maybeSingle();
     if(row?.payload&&Object.keys(row.payload).length){
       applyPayload(row.payload);
       if(row.payload._ts)curTs=row.payload._ts;
-    }else if(teachers.length||halls.length||days.length){
-      markDirty();
     }
+    /* داتای بەشی دەربارە — هەمیشە هاوبەشە (تەنها خاوەن دەیگۆڕێت) */
     const{data:ab}=await supa.from('pw_about').select('payload').eq('id',1).maybeSingle();
     if(ab?.payload){ABOUT=ab.payload;
       if(ABOUT.logo_owner){idb.set('logo_owner',ABOUT.logo_owner).then(()=>showLogo('owner',ABOUT.logo_owner))}
@@ -650,50 +658,60 @@ function applyPayload(p){
   halls=p.halls||[];
   days=(p.days||[]).filter(d=>d.date&&!isFri(d.date));
   checks=p.checks||{};assign=p.assign||{};violations=p.violations||[];
-  if(p.names){NAMES=p.names;LS.set('pw_names',NAMES)}
-  if(p.chk)LS.set('pw_chk',p.chk);
-  LS.set('pw_teachers',teachers);LS.set('pw_halls',halls);LS.set('pw_days',days);
-  LS.set('pw_checks',checks);LS.set('pw_assign',assign);LS.set('pw_violations',violations);
+  if(p.names){NAMES=p.names;LS.set(lsKey('pw_names'),NAMES)}
+  if(p.chk)LS.set(lsKey('pw_chk'),p.chk);
+  saveLocalOnly();
   if(p.font){idb.set('font',p.font);applyFont(p.font)}
   if(p.logo_min){logoMin=p.logo_min;idb.set('logo_min',p.logo_min);showLogo('min',p.logo_min)}
   if(p.logo_sch){logoSch=p.logo_sch;idb.set('logo_sch',p.logo_sch);showLogo('sch',p.logo_sch)}
   loadNames();renderCurrent();buildPrint();
 }
+function saveLocalOnly(){
+  LS.set(lsKey('pw_teachers'),teachers);LS.set(lsKey('pw_halls'),halls);
+  LS.set(lsKey('pw_days'),days);LS.set(lsKey('pw_checks'),checks);
+  LS.set(lsKey('pw_assign'),assign);LS.set(lsKey('pw_violations'),violations);
+}
 function markDirty(){
   clearTimeout(cloudTimer);
   cloudTimer=setTimeout(pushCloud,1500);
 }
+/* ================= پاشەکەوتی داتابەیس — بە upsert بەپێی ئیمەیڵ ================= */
 async function pushCloud(){
   if(!supa||!me)return;
+  const email=dataKey();
   try{
     const payload={teachers,halls,days,checks,assign,violations,
-      names:NAMES,chk:LS.get('pw_chk',{}),
+      names:NAMES,chk:LS.get(lsKey('pw_chk'),{}),
       font:await idb.get('font')||null,
       logo_min:await idb.get('logo_min')||null,
       logo_sch:await idb.get('logo_sch')||null,
       _ts:Date.now()};
     curTs=payload._ts;
-    await supa.from('pw_data')
-      .update({payload,updated_by:me.email,updated_at:new Date().toISOString()}).eq('id',1);
+    /* upsert — ئەگەر ڕیز بۆ ئەم ئیمەیڵە هەبوو نوێی دەکاتەوە، ئەگەر نەبوو دروستی دەکات */
+    const{error}=await supa.from('pw_data')
+      .upsert({email:email,payload:payload,updated_by:email,updated_at:new Date().toISOString()},
+        {onConflict:'email'});
+    if(error)throw error;
     document.getElementById('syncLbl').textContent='✓ پاشەکەوت کرا: '+timeNow();
   }catch(e){
     document.getElementById('syncLbl').textContent='⚠ پاشەکەوتی ناوخۆیی (بێ ئینتەرنێت)';
   }
 }
+/* نوێکردنەوەی خۆکار — تەنها داتای هەمان ئیمەیڵ */
 setInterval(async()=>{
   if(!supa||!me||appMain.style.display==='none')return;
   try{
-    const{data:row}=await supa.from('pw_data').select('payload').eq('id',1).maybeSingle();
+    const{data:row}=await supa.from('pw_data').select('payload').eq('email',dataKey()).maybeSingle();
     if(row?.payload?._ts&&row.payload._ts>curTs){
       applyPayload(row.payload);curTs=row.payload._ts;
-      toast('داتاکان نوێ کرایەوە لە داتابەیسەوە');
+      toast('داتاکانت نوێ کرایەوە');
     }
   }catch(e){}
 },25000);
 window.addEventListener('focus',async()=>{
   if(!supa||!me)return;
   try{
-    const{data:row}=await supa.from('pw_data').select('payload').eq('id',1).maybeSingle();
+    const{data:row}=await supa.from('pw_data').select('payload').eq('email',dataKey()).maybeSingle();
     if(row?.payload?._ts&&row.payload._ts>curTs){applyPayload(row.payload);curTs=row.payload._ts}
   }catch(e){}
 });
@@ -732,19 +750,19 @@ async function delFont(){await idb.set('font',null);
   markDirty();location.reload()}
 
 /* ================= ناوە فەرمییەکان ================= */
-function loadNames(){NAMES=LS.get('pw_names',{});
+function loadNames(){NAMES=LS.get(lsKey('pw_names'),{});
   nGen.value=NAMES.gen||'';nDir.value=NAMES.dir||'';nSch.value=NAMES.sch||'';
   nMgr.value=NAMES.mgr||'';nYear.value=NAMES.year||'';nMail.value=NAMES.mail||''}
 document.getElementById('saveNames').onclick=()=>{
   NAMES={gen:nGen.value.trim(),dir:nDir.value.trim(),sch:nSch.value.trim(),
          mgr:nMgr.value.trim(),year:nYear.value.trim(),mail:nMail.value.trim()};
-  LS.set('pw_names',NAMES);toast('ناوەکان پاشەکەوت کران');buildPrint();
+  LS.set(lsKey('pw_names'),NAMES);toast('ناوەکان پاشەکەوت کران');buildPrint();
   logAct('گۆڕینی ناوە فەرمییەکان')};
 async function clearNames(){
   const ok=await confirmBox('ئایە ڕازیت بە سڕینەوەی هەموو زانیارییەکان؟');
   if(!ok)return;
   NAMES={gen:'',dir:'',sch:'',mgr:'',year:'',mail:''};
-  LS.set('pw_names',NAMES);loadNames();buildPrint();
+  LS.set(lsKey('pw_names'),NAMES);loadNames();buildPrint();
   logAct('سڕینەوەی ناوە فەرمییەکان');toast('زانیارییەکان سڕدرانەوە','no')}
 
 /* ================= وێنەکان ================= */
@@ -882,17 +900,37 @@ document.getElementById('themeBtn').onclick=()=>{
   localStorage.setItem('pwdark',dark?'1':'0')};
 if(localStorage.getItem('pwdark')==='1')document.documentElement.classList.add('dark');
 
-/* ================= دەنگ و پەیام و پەنجەرە ================= */
-function beep(ok){try{const a=new (window.AudioContext||window.webkitAudioContext)();
-  const o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);
-  o.type=ok?'sine':'square';
-  if(ok){o.frequency.setValueAtTime(660,a.currentTime);o.frequency.setValueAtTime(880,a.currentTime+.12)}
-  else o.frequency.setValueAtTime(200,a.currentTime);
-  g.gain.setValueAtTime(.15,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.35);
-  o.start();o.stop(a.currentTime+.4)}catch(e){}}
-function toast(msg,kind){const t=document.createElement('div');
+/* ================= دەنگ — یەک جار بۆ هەر کردارێک ================= */
+let audioCtx=null;
+function getCtx(){
+  if(!audioCtx){
+    try{audioCtx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}
+  }
+  return audioCtx;
+}
+let soundLock=0;
+function beep(ok){
+  /* پاراستن لە دووبارەبوونەوە — هەر ٢٠٠ چرکە تەنها یەک دەنگ */
+  const now=Date.now();
+  if(now-soundLock<200)return;
+  soundLock=now;
+  const c=getCtx();if(!c)return;
+  try{
+    const o=c.createOscillator(),g=c.createGain();
+    o.connect(g);g.connect(c.destination);
+    o.type=ok?'sine':'square';
+    if(ok){o.frequency.setValueAtTime(660,c.currentTime);o.frequency.setValueAtTime(880,c.currentTime+.12)}
+    else o.frequency.setValueAtTime(200,c.currentTime);
+    g.gain.setValueAtTime(.15,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.35);
+    o.start();o.stop(c.currentTime+.4);
+  }catch(e){}
+}
+function toast(msg,kind){
+  const t=document.createElement('div');
   t.className='tst'+(kind==='no'?' no':'');t.textContent=msg;
-  document.getElementById('toast').appendChild(t);beep(kind!=='no');
+  document.getElementById('toast').appendChild(t);
+  beep(kind!=='no');
   setTimeout(()=>t.remove(),4200)}
 let askCb=null;
 function confirmBox(q){document.getElementById('qtext').textContent=q;
@@ -1074,7 +1112,7 @@ async function clearDays(){
   renderDays();renderExams();renderSup();renderDash();
   logAct('سڕینەوەی هەموو ڕۆژ و ڕێکەوتەکان');toast('هەموو ڕۆژ و ڕێکەوتەکان سڕدرانەوە','no')}
 
-/* ================= دیاریکردنی خشتە ================= */
+/* ================= دیاریکردنی خشتە — چێک بۆکس بۆ یەک مامۆستا بۆ هەر ڕۆژێک ================= */
 function renderExams(){const t=document.getElementById('examTbl');
   if(!teachers.length||!days.length){
     t.innerHTML='<tr><td class="hint">'+
@@ -1090,7 +1128,15 @@ function renderExams(){const t=document.getElementById('examTbl');
     h+='</tr>'});
   h+='</tbody>';t.innerHTML=h}
 function togCheck(tid,did,v){
+  /* یاسای چێک بۆکس — بۆ هەر ڕۆژێک تەنها یەک مامۆستا */
   if(v){
+    /* پشکنین: ئایا مامۆستایەکی تر بۆ ئەم ڕۆژە چێک کراوە؟ */
+    const others=teachers.filter(x=>x.id!==tid&&checks[x.id+'|'+did]);
+    if(others.length){
+      toast('ناتوانرێت: مامۆستای «'+others[0].name+'» پێشتر بۆ ئەم ڕۆژە چێک کراوە — سەرەتا چێکی ئەو لابە','no');
+      renderExams();
+      return;
+    }
     checks[tid+'|'+did]=1;
     Object.keys(assign).forEach(k=>{
       if(k.startsWith(did+'|')){
@@ -1220,6 +1266,7 @@ async function clearViolations(){
   violations=[];save();renderViol();toast('تۆمارەکان سڕدرانەوە','no')}
 
 /* ================= تۆماری کردارەکان ================= */
+let logRows=[];
 async function loadLog(){
   if(!isOwner||!supa)return;
   const t=document.getElementById('logTbl');
@@ -1240,7 +1287,6 @@ async function loadLog(){
        '<td class="name" style="text-align:right">'+esc(r.action||'—')+'</td><td>'+tm+'</td></tr>'});
   h+='</tbody>';t.innerHTML=h;
 }
-let logRows=[];
 
 /* ================= چاپکردن ================= */
 function toggleColor(){colored=!colored;buildPrint();
@@ -1263,7 +1309,7 @@ function fitPrint(){
   }
 }
 function buildPrint(){
-  const c=LS.get('pw_chk',{min:true,sch:true});
+  const c=LS.get(lsKey('pw_chk'),{min:true,sch:true});
   let h='<div class="phead">';
   h+='<div class="plogo">'+(c.min&&logoMin?'<img src="'+logoMin+'">':'')+'</div>';
   h+='<div class="ptitle">';
@@ -1322,7 +1368,7 @@ window.addEventListener('beforeprint',()=>{go('print');fitPrint()});
 /* ================= باکئەپ ================= */
 async function exportData(){
   const data={v:2,teachers,halls,days,checks,assign,violations,
-    names:NAMES,chk:LS.get('pw_chk',{}),about:ABOUT,
+    names:NAMES,chk:LS.get(lsKey('pw_chk'),{}),about:ABOUT,
     font:await idb.get('font')||null,
     logo_min:await idb.get('logo_min')||null,
     logo_sch:await idb.get('logo_sch')||null,
@@ -1345,8 +1391,8 @@ document.getElementById('impIn').onchange=e=>{const f=e.target.files[0];if(!f)re
       teachers=d.teachers||[];halls=d.halls||[];
       days=(d.days||[]).filter(x=>x.date&&!isFri(x.date));
       checks=d.checks||{};assign=d.assign||{};violations=d.violations||[];
-      if(d.names){NAMES=d.names;LS.set('pw_names',d.names)}
-      if(d.chk)LS.set('pw_chk',d.chk);
+      if(d.names){NAMES=d.names;LS.set(lsKey('pw_names'),d.names)}
+      if(d.chk)LS.set(lsKey('pw_chk'),d.chk);
       if(d.about){ABOUT=d.about;
         if(supa&&isOwner)await supa.from('pw_about')
           .update({payload:ABOUT,updated_at:new Date().toISOString()}).eq('id',1)}
@@ -1361,12 +1407,12 @@ document.getElementById('impIn').onchange=e=>{const f=e.target.files[0];if(!f)re
   r.readAsText(f);e.target.value=''};
 async function makeBackup(){
   const data={teachers,halls,days,checks,assign,violations,
-    names:NAMES,chk:LS.get('pw_chk',{})};
+    names:NAMES,chk:LS.get(lsKey('pw_chk'),{})};
   const id=Date.now().toString(36);
   const d=new Date(),p=n=>fa(String(n).padStart(2,'0'));
   const name='باکئەپ — '+p(d.getDate())+'/'+p(d.getMonth()+1)+'/'+fa(d.getFullYear())+
     '  '+p(d.getHours())+':'+p(d.getMinutes());
-  const bl=LS.get('pw_bklist',[]);bl.unshift({id,name});LS.set('pw_bklist',bl);
+  const bl=LS.get(lsKey('pw_bklist'),[]);bl.unshift({id,name});LS.set(lsKey('pw_bklist'),bl);
   await idb.set('bk_'+id,JSON.stringify(data));
   renderBks();logAct('دروستکردنی باکئەپی ناوخۆیی');toast('باکئەپ دروست کرا')}
 async function restoreBk(id){
@@ -1377,34 +1423,33 @@ async function restoreBk(id){
   const d=JSON.parse(raw);
   teachers=d.teachers||[];halls=d.halls||[];days=d.days||[];
   checks=d.checks||{};assign=d.assign||{};violations=d.violations||[];
-  if(d.names){NAMES=d.names;LS.set('pw_names',d.names)}
-  if(d.chk)LS.set('pw_chk',d.chk);
+  if(d.names){NAMES=d.names;LS.set(lsKey('pw_names'),d.names)}
+  if(d.chk)LS.set(lsKey('pw_chk'),d.chk);
   save();logAct('گەڕاندنەوەی باکئەپی ناوخۆیی');
   toast('باکئەپ گەڕێندرایەوە');renderBks();renderDash();renderTeachers();renderHalls();renderDays()}
 async function delBk(id){
   const ok=await confirmBox('ئایە ڕازیت بە سڕینەوەی ئەم باکئەپە؟');
   if(!ok)return;
   await idb.set('bk_'+id,null);
-  LS.set('pw_bklist',LS.get('pw_bklist',[]).filter(x=>x.id!==id));
+  LS.set(lsKey('pw_bklist'),LS.get(lsKey('pw_bklist'),[]).filter(x=>x.id!==id));
   renderBks();toast('باکئەپ سڕدرایەوە','no')}
 function renderBks(){
-  const tb=document.getElementById('bkTb');const bl=LS.get('pw_bklist',[]);
+  const tb=document.getElementById('bkTb');const bl=LS.get(lsKey('pw_bklist'),[]);
   if(!bl.length){tb.innerHTML='<tr><td colspan="2" class="hint">هیچ باکئەپێک دروست نەکراوە</td></tr>';return}
   tb.innerHTML=bl.map(b=>'<tr><td class="name">'+esc(b.name)+'</td><td>'+
     '<button class="btn ghost sm" onclick="restoreBk(\''+b.id+'\')">♻️ گەڕاندنەوە</button> '+
     '<button class="btn ghost sm" onclick="delBk(\''+b.id+'\')">🗑️ سڕینەوە</button></td></tr>').join('')}
 async function wipeAll(){
-  const ok=await confirmBox('ئایە ڕازیت بە سفرکردنەوەی سیستەم؟ هەموو داتاکان دەسڕدرێنەوە و ناگەڕێنەوە');
+  const ok=await confirmBox('ئایە ڕازیت بە سفرکردنەوەی سیستەم؟ هەموو داتاکانی ئیمەیڵەکەت دەسڕدرێنەوە و ناگەڕێنەوە');
   if(!ok)return;
   ['pw_teachers','pw_halls','pw_days','pw_checks','pw_assign','pw_names','pw_chk','pw_bklist','pw_violations']
-    .forEach(k=>localStorage.removeItem(k));
+    .forEach(k=>localStorage.removeItem(lsKey(k)));
   await idb.set('font',null);await idb.set('logo_min',null);
   await idb.set('logo_sch',null);await idb.set('logo_owner',null);
-  const bl=LS.get('pw_bklist',[]);
+  const bl=LS.get(lsKey('pw_bklist'),[]);
   for(const b of bl)await idb.set('bk_'+b,null);
-  if(supa&&isOwner){
-    try{await supa.from('pw_data').update({payload:{},updated_by:me.email,
-      updated_at:new Date().toISOString()}).eq('id',1)}catch(e){}
+  if(supa&&me){
+    try{await supa.from('pw_data').delete().eq('email',dataKey())}catch(e){}
   }
   logAct('سفرکردنەوەی سیستەم');
   toast('سیستەم سفر کرایەوە');setTimeout(()=>location.reload(),700)}
@@ -1417,6 +1462,7 @@ function bootApp(){
     const ls=idb.get('logo_sch');ls&&ls.then(x=>{if(x){logoSch=x;showLogo('sch',x)}});
     const lo=idb.get('logo_owner');lo&&lo.then(x=>{if(x)showLogo('owner',x)});
   }catch(e){}
+  loadLocal();
   loadNames();initDaySelects();renderDash();buildPrint();
   document.getElementById('syncLbl').textContent=supa?'✓ پەیوەست بە داتابەیس':'⚠ دۆخی ناوخۆیی';
 }

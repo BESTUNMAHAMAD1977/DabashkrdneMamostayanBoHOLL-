@@ -9,7 +9,7 @@
 <style>
 @font-face{font-family:"Parwarda2026";src:local("Parwarda2026"),local("Parwarda 2026")}
 :root{
-  --font:"Parwarda2026","Noto Naskh Arabic",Tahoma,sans-serif;
+  --font:"Parwarda2026","Rabar","Noto Naskh Arabic",Tahoma,sans-serif;
   --bg:#f2f5fb;--panel:#ffffff;--ink:#16203a;--mut:#64748b;--line:#e2e8f0;
   --br:#0e7490;--br2:#06b6d4;--ok:#16a34a;--no:#dc2626;
   --r:16px;--sh:0 12px 32px rgba(15,23,42,.08)
@@ -20,18 +20,45 @@ html.dark{
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);transition:background .3s,color .3s;font-family:var(--font)}
-.authwrap{min-height:100vh;display:grid;place-items:center;padding:20px}
-.authcard{background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:var(--sh);
-  padding:30px 26px;width:min(94vw,420px);text-align:center}
-.authcard .mark{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;margin:0 auto 12px;
-  background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;font-size:28px;font-weight:800}
-.authcard h2{margin:0 0 4px}
-.authcard .tabs{display:flex;gap:6px;margin:16px 0 14px;background:var(--bg);border-radius:12px;padding:4px}
-.authcard .tabs button{all:unset;flex:1;cursor:pointer;font:inherit;padding:9px;border-radius:9px;
-  color:var(--mut);text-align:center}
-.authcard .tabs button.on{background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;font-weight:700}
-#authMsg{min-height:22px;margin-top:10px;font-weight:700}
+/* ===== پەڕەی چوونەژوورەوە — دیزاینی نوێ ===== */
+.authwrap{min-height:100vh;display:grid;place-items:center;padding:20px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#0e7490 0%,#06b6d4 50%,#0891b2 100%)}
+.authwrap::before,.authwrap::after{content:'';position:absolute;border-radius:50%;filter:blur(70px);opacity:.35}
+.authwrap::before{width:420px;height:420px;background:#22d3ee;top:-140px;inset-inline-start:-120px;animation:float1 9s ease-in-out infinite}
+.authwrap::after{width:380px;height:380px;background:#a5f3fc;bottom:-120px;inset-inline-end:-100px;animation:float2 11s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,40px)}}
+@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,-30px)}}
+.authcard{background:rgba(255,255,255,.97);border-radius:24px;box-shadow:0 24px 70px rgba(2,20,40,.35);
+  padding:34px 28px;width:min(94vw,430px);text-align:center;position:relative;z-index:2;
+  animation:pop .5s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes pop{from{opacity:0;transform:translateY(26px) scale(.96)}to{opacity:1;transform:none}}
+.authcard .mark{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;margin:0 auto 14px;
+  background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;font-size:32px;font-weight:800;
+  box-shadow:0 10px 26px rgba(6,182,212,.45);animation:markPulse 3s ease-in-out infinite}
+@keyframes markPulse{0%,100%{box-shadow:0 10px 26px rgba(6,182,212,.45)}50%{box-shadow:0 10px 34px rgba(6,182,212,.75)}}
+.authcard h2{margin:0 0 4px;font-size:24px;background:linear-gradient(135deg,var(--br),var(--br2));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.authcard .sub{color:#64748b;font-size:13px;margin:0 0 18px}
+.authcard .tabs{display:flex;gap:6px;margin:0 0 16px;background:#eef4f8;border-radius:14px;padding:5px}
+.authcard .tabs button{all:unset;flex:1;cursor:pointer;font:inherit;padding:10px;border-radius:10px;
+  color:#64748b;text-align:center;font-weight:700;transition:.25s}
+.authcard .tabs button.on{background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;
+  box-shadow:0 6px 16px rgba(6,182,212,.4)}
+.afield{position:relative;margin-bottom:14px;text-align:start}
+.afield input{width:100%;padding:13px 44px 13px 14px;border:2px solid #dfe8f0;border-radius:14px;
+  background:#f8fbfd;font:inherit;font-size:15px;color:#16203a;transition:.25s;outline:none}
+.afield input:focus{border-color:var(--br2);background:#fff;box-shadow:0 0 0 4px rgba(6,182,212,.15)}
+.afield .ic{position:absolute;inset-inline-end:13px;top:50%;transform:translateY(-50%);font-size:17px;pointer-events:none}
+.afield .eye{pointer-events:auto;cursor:pointer;user-select:none}
+#authBtn{width:100%;padding:13px;border:none;border-radius:14px;cursor:pointer;font:inherit;font-size:16px;
+  font-weight:800;color:#fff;background:linear-gradient(135deg,var(--br),var(--br2));
+  box-shadow:0 10px 24px rgba(6,182,212,.45);transition:.25s}
+#authBtn:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(6,182,212,.6)}
+#authBtn:disabled{opacity:.6;cursor:wait;transform:none}
+#authMsg{min-height:24px;margin-top:12px;font-weight:700;font-size:13.5px}
 #authMsg.ok{color:var(--ok)}#authMsg.no{color:var(--no)}
+.authnote{margin-top:14px;color:#64748b;font-size:12px;line-height:1.8;
+  background:#f0f7fa;border-radius:12px;padding:10px}
 .app{display:flex;min-height:100vh}
 .side{width:260px;flex-shrink:0;background:var(--panel);border-inline-start:1px solid var(--line);
   padding:16px 12px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px}
@@ -62,17 +89,28 @@ body{margin:0;background:var(--bg);color:var(--ink);transition:background .3s,co
 .view.on{display:block;animation:in .35s ease}
 @keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);
-  padding:18px;margin-bottom:14px}
+/* ===== کارتەکان — فلیکسی نەرم + تیشکی جوان ===== */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  padding:18px;margin-bottom:14px;position:relative;
+  transition:transform .25s cubic-bezier(.2,.9,.3,1.2),box-shadow .25s}
+.card::after{content:'';position:absolute;inset:0;border-radius:var(--r);pointer-events:none;
+  box-shadow:0 0 0 0 rgba(6,182,212,0);transition:box-shadow .35s}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(6,182,212,.18)}
+.card:hover::after{box-shadow:0 0 0 3px rgba(6,182,212,.22)}
 .card h2{margin:0 0 10px;font-size:17px}
 .card p{color:var(--mut);margin:0 0 10px;line-height:1.9;font-size:14px}
 .big{font-size:30px;font-weight:800;color:var(--br);margin-top:6px}
 .btn{all:unset;display:inline-block;cursor:pointer;font:inherit;font-weight:700;padding:10px 18px;
-  border-radius:12px;color:#fff;background:linear-gradient(135deg,var(--br),var(--br2));box-shadow:var(--sh)}
+  border-radius:12px;color:#fff;background:linear-gradient(135deg,var(--br),var(--br2));box-shadow:var(--sh);
+  transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(6,182,212,.4)}
+.btn:active{transform:translateY(0) scale(.97)}
 .btn.ghost{background:none;color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.btn.ghost:hover{background:rgba(6,182,212,.08);border-color:var(--br2)}
 .btn.sm{padding:6px 10px;font-size:13px}
 .inp{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:transparent;
-  color:var(--ink);font:inherit;margin:4px 0 10px}
+  color:var(--ink);font:inherit;margin:4px 0 10px;transition:border-color .2s,box-shadow .2s}
+.inp:focus{outline:none;border-color:var(--br2);box-shadow:0 0 0 3px rgba(6,182,212,.12)}
 .inp.sm{width:auto;min-width:120px;margin:0}
 .sel{padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);font:inherit}
 .lbl{display:block;color:var(--mut);font-size:13px;margin-top:6px}
@@ -131,7 +169,8 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
 .pfoot.compact .pcard-t{font-size:10px;margin-bottom:2px}
 .pfoot.compact .pitem{font-size:9px;padding:0}
 .pfoot.compact .badge{min-width:17px;height:17px;font-size:9px;border-width:1.5px}
-#mask{position:fixed;inset:0;background:rgba(2,10,30,.45);display:none;place-items:center;z-index:50}
+#mask{position:fixed;inset:0;background:rgba(2,10,30,.45);display:none;place-items:center;z-index:50;
+  backdrop-filter:blur(3px)}
 #mask.on{display:grid}
 #mask .box{background:var(--panel);border-radius:var(--r);padding:22px;width:min(92vw,380px);
   box-shadow:var(--sh);text-align:center;animation:in .25s ease}
@@ -139,7 +178,8 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
 #mask .row{display:flex;gap:10px;justify-content:center}
 #toast{position:fixed;bottom:18px;inset-inline-start:18px;z-index:60;display:flex;flex-direction:column;gap:8px}
 .tst{background:var(--panel);border:1px solid var(--line);border-inline-start:5px solid var(--ok);
-  border-radius:12px;padding:10px 16px;box-shadow:var(--sh);font-weight:700;animation:in .25s ease;max-width:420px}
+  border-radius:12px;padding:10px 16px;box-shadow:var(--sh);font-weight:700;animation:tin .3s ease;max-width:420px}
+@keyframes tin{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:none}}
 .tst.no{border-inline-start-color:var(--no)}
 @media print{
   @page{size:A4 landscape;margin:8mm}
@@ -167,16 +207,23 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
   <div class="authcard">
     <div class="mark">پ</div>
     <h2>پەروەردە ٢٠٢٦</h2>
-    <p class="hint" style="margin:0">سیستەمی دابەشکردنی مامۆستایان بۆ هۆڵەکانی تاقیکردنەوە</p>
+    <p class="sub">سیستەمی دابەشکردنی مامۆستایان بۆ هۆڵەکانی تاقیکردنەوە</p>
     <div class="tabs">
       <button id="tabLogin" class="on">چوونەژوورەوە</button>
       <button id="tabSignup">تۆمارکردنی نوێ</button>
     </div>
-    <input class="inp" id="aEmail" type="email" placeholder="ئیمەیڵ ...">
-    <input class="inp" id="aPass" type="password" placeholder="وشەی نهێنی (لانیکەم ٦ پیت) ...">
-    <button class="btn" id="authBtn" style="width:100%">چوونەژوورەوە</button>
+    <div class="afield">
+      <input id="aEmail" type="email" placeholder="ئیمەیڵ ..." style="padding-inline-end:44px">
+      <span class="ic">📧</span>
+    </div>
+    <div class="afield">
+      <input id="aPass" type="password" placeholder="وشەی نهێنی (لانیکەم ٦ پیت) ...">
+      <span class="ic eye" id="eyeBtn" title="بینینی وشەی نهێنی">👁️</span>
+    </div>
+    <button id="authBtn">چوونەژوورەوە</button>
     <div id="authMsg"></div>
-    <p class="hint" style="margin-top:14px;margin-bottom:0">هەر بەکارهێنەرێک داتای تایبەتی خۆی هەیە — داتاکان بە ئیمەیڵ جیا دەکرێنەوە</p>
+    <p class="authnote">🔐 هەر بەکارهێنەرێک داتای تایبەتی خۆی هەیە — داتاکان بە ئیمەیڵ جیا دەکرێنەوە.<br>
+    👑 یەکەم کەس کە تۆمار دەکات دەبێتە خاوەنی پرۆژە</p>
   </div>
 </div>
 
@@ -266,19 +313,20 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
       </div>
       <div class="card">
         <h2>لۆگۆکان — تەنها فۆرماتی پی ئێن جی</h2>
+        <p>لۆگۆکان بە ئاسانی بگۆڕە یان بسڕەوە — هەر کاتێک لە هەمان بەشدەوە.</p>
         <div class="logos">
           <div class="logoBox">
             <div class="ph" id="ph_min">لۆگۆی وەزارەتی پەروەردە</div>
             <img class="logo" id="img_min" hidden>
-            <label class="btn ghost file">هەڵبژاردنی وێنە<input type="file" id="up_min" accept="image/png"></label>
-            <div class="row"><button class="btn ghost" onclick="delLogo('min')">سڕینەوە</button>
+            <label class="btn ghost file">🔄 گۆڕینی وێنە<input type="file" id="up_min" accept="image/png"></label>
+            <div class="row"><button class="btn ghost" onclick="delLogo('min')">🗑️ سڕینەوە</button>
             <label class="chk"><input type="checkbox" id="chkMin" checked> لە چاپکردندا دەربکەوێت</label></div>
           </div>
           <div class="logoBox">
             <div class="ph" id="ph_sch">لۆگۆی قوتابخانە</div>
             <img class="logo" id="img_sch" hidden>
-            <label class="btn ghost file">هەڵبژاردنی وێنە<input type="file" id="up_sch" accept="image/png"></label>
-            <div class="row"><button class="btn ghost" onclick="delLogo('sch')">سڕینەوە</button>
+            <label class="btn ghost file">🔄 گۆڕینی وێنە<input type="file" id="up_sch" accept="image/png"></label>
+            <div class="row"><button class="btn ghost" onclick="delLogo('sch')">🗑️ سڕینەوە</button>
             <label class="chk"><input type="checkbox" id="chkSch" checked> لە چاپکردندا دەربکەوێت</label></div>
           </div>
         </div>
@@ -368,7 +416,10 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
             <button class="btn ghost sm" onclick="clearChecks()">🗑️ سڕینەوەی هەڵبژاردنەکان</button>
           </div>
         </div>
-        <p class="hint"><span class="warn">یاسای چێک بۆکس:</span> بۆ هەر ڕۆژێک تەنها <b>یەک مامۆستا</b> دەکرێت چێک بکرێت — کاتێک مامۆستایەک چێک بکرێت، ناتوانرێت مامۆستایەکی تر بۆ هەمان ڕۆژ چێک بکرێت. هەروەها <b>مەرجی قوڕس</b>: مامۆستای چێککراو لە خشتەی چاودێری هۆڵەکان دانانرێت. (لە حاڵەتی کەمیی تونددا بە شکاندنی ئەم مەرجە دادەنرێت و لە تۆماری پێشێلکردنەکاندا تۆمار دەکرێت.)</p>
+        <p class="hint">چێک بۆکسەکان <b>بۆ هەموو مامۆستایان ئازادن</b> بۆ هەموو ڕۆژ و ڕێکەوتەکان —
+        دەتوانیت هەر چەند مامۆستایەک بۆ هەمان ڕۆژ چێک بکەیت.
+        <span class="warn">مەرجی قوڕس:</span> مامۆستای چێککراو لە خشتەی چاودێری هۆڵەکانی ئەو ڕۆژەدا دانانرێت
+        (لە حاڵەتی کەمیی تونددا بە شکاندنی ئەم مەرجە دادەنرێت و لە تۆماری پێشێلکردنەکاندا تۆمار دەکرێت).</p>
         <div class="tblwrap"><table class="tbl" id="examTbl"></table></div>
       </div>
     </section>
@@ -459,7 +510,10 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
       <div class="card">
         <div class="rowflex" style="justify-content:space-between">
           <h2 style="margin:0">📜 تۆماری کردارەکان — تەنها خاوەنی پرۆژە</h2>
-          <button class="btn ghost sm" onclick="loadLog()">🔄 نوێکردنەوە</button>
+          <div class="rowflex" style="margin:0">
+            <button class="btn ghost sm" onclick="loadLog()">🔄 نوێکردنەوە</button>
+            <button class="btn ghost sm" onclick="clearLog()" style="color:var(--no)">🗑️ سڕینەوەی هەموو تۆمارەکان</button>
+          </div>
         </div>
         <p class="hint">هەموو کردارەکانی هەموو بەکارهێنەران بە ئیمەیڵی ئەنجامدەر و کات تۆمار دەکرێن.</p>
         <div class="tblwrap"><table class="tbl" id="logTbl"></table></div>
@@ -481,7 +535,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
           <div class="logoBox" style="width:230px">
             <div class="ph" id="ph_owner">وێنەی خاوەنی پڕۆژە</div>
             <img class="logo" id="img_owner" hidden style="max-width:150px;max-height:170px;border-radius:12px">
-            <label class="btn ghost file">هەڵبژاردنی وێنە<input type="file" id="up_owner" accept="image/png"></label>
+            <label class="btn ghost file">🔄 گۆڕینی وێنە<input type="file" id="up_owner" accept="image/png"></label>
             <div class="row"><button class="btn ghost" onclick="delLogo('owner')">🗑️ سڕینەوەی وێنە</button></div>
           </div>
           <div>
@@ -533,13 +587,16 @@ const ABOUT_DEF={name:'بێستون محمد ئەحمەد',job:'مامۆستا',
   ph1:'٠٧٥٠١٩٩٨٦٧٥',ph2:'٠٧٧٠١٩٩٨٦٧٥',
   rights:'ئەم سیستەمە تایبەتە بە خاوەنەکەی؛ تەنها بۆ خزمەتی کەرتی پەروەردە بەخۆڕایی پێشکەش دەکرێت و فرۆشتنی قەدەغەیە.'};
 
-/* ================= یەکەی داتا — بەپێی ئیمەیڵ ================= */
 function dataKey(){return me?(me.email||'local'):'local'}
-/* پاشەکەوتی ناوخۆیی — بەپێی ئیمەیڵ تا داتای بەکارهێنەران تێکەڵ نەبن */
 function lsKey(k){return k+'_'+(dataKey().replace(/[^a-zA-Z0-9]/g,'_'))}
 const save=()=>{LS.set(lsKey('pw_teachers'),teachers);LS.set(lsKey('pw_halls'),halls);
   LS.set(lsKey('pw_days'),days);LS.set(lsKey('pw_checks'),checks);LS.set(lsKey('pw_assign'),assign);
   LS.set(lsKey('pw_violations'),violations);markDirty()};
+function saveLocalOnly(){
+  LS.set(lsKey('pw_teachers'),teachers);LS.set(lsKey('pw_halls'),halls);
+  LS.set(lsKey('pw_days'),days);LS.set(lsKey('pw_checks'),checks);
+  LS.set(lsKey('pw_assign'),assign);LS.set(lsKey('pw_violations'),violations);
+}
 function loadLocal(){
   teachers=LS.get(lsKey('pw_teachers'),[]);
   halls=LS.get(lsKey('pw_halls'),[]);
@@ -573,10 +630,18 @@ tabLogin.onclick=()=>{authMode='login';tabLogin.classList.add('on');tabSignup.cl
 tabSignup.onclick=()=>{authMode='signup';tabSignup.classList.add('on');tabLogin.classList.remove('on');
   authBtn.textContent='تۆمارکردنی نوێ';authMsg.textContent=''};
 
+/* بینینی وشەی نهێنی */
+eyeBtn.onclick=()=>{
+  const isPass=aPass.type==='password';
+  aPass.type=isPass?'text':'password';
+  eyeBtn.textContent=isPass?'🙈':'👁️';
+  eyeBtn.title=isPass?'شاردنەوەی وشەی نهێنی':'بینینی وشەی نهێنی';
+};
+
 authBtn.onclick=async()=>{
   const email=aEmail.value.trim(),pass=aPass.value;
   authMsg.className='';authMsg.textContent='';
-  if(!email||!pass){authMsg.textContent='ئیمەیڵ و وشەی نهێنی بنووسە';return}
+  if(!email||!pass){authMsg.className='no';authMsg.textContent='ئیمەیڵ و وشەی نهێنی بنووسە';return}
   authBtn.disabled=true;
   try{
     if(authMode==='login'){
@@ -629,20 +694,18 @@ async function startApp(){
   await loadCloud();
 }
 
-/* ================= هاوکاتی داتابەیس — ڕیز بەپێی ئیمەیڵ ================= */
+/* ================= هاوکاتی داتابەیس ================= */
 async function loadCloud(){
   if(!supa||!me)return;
   const s=document.getElementById('syncLbl');
   const email=dataKey();
   try{
     s.textContent='⏳ گەڕانەوەی داتاکان...';
-    /* داتای تایبەتی ئەم بەکارهێنەرە — بە ئیمەیڵی خۆی */
     const{data:row}=await supa.from('pw_data').select('payload').eq('email',email).maybeSingle();
     if(row?.payload&&Object.keys(row.payload).length){
       applyPayload(row.payload);
       if(row.payload._ts)curTs=row.payload._ts;
     }
-    /* داتای بەشی دەربارە — هەمیشە هاوبەشە (تەنها خاوەن دەیگۆڕێت) */
     const{data:ab}=await supa.from('pw_about').select('payload').eq('id',1).maybeSingle();
     if(ab?.payload){ABOUT=ab.payload;
       if(ABOUT.logo_owner){idb.set('logo_owner',ABOUT.logo_owner).then(()=>showLogo('owner',ABOUT.logo_owner))}
@@ -666,16 +729,10 @@ function applyPayload(p){
   if(p.logo_sch){logoSch=p.logo_sch;idb.set('logo_sch',p.logo_sch);showLogo('sch',p.logo_sch)}
   loadNames();renderCurrent();buildPrint();
 }
-function saveLocalOnly(){
-  LS.set(lsKey('pw_teachers'),teachers);LS.set(lsKey('pw_halls'),halls);
-  LS.set(lsKey('pw_days'),days);LS.set(lsKey('pw_checks'),checks);
-  LS.set(lsKey('pw_assign'),assign);LS.set(lsKey('pw_violations'),violations);
-}
 function markDirty(){
   clearTimeout(cloudTimer);
   cloudTimer=setTimeout(pushCloud,1500);
 }
-/* ================= پاشەکەوتی داتابەیس — بە upsert بەپێی ئیمەیڵ ================= */
 async function pushCloud(){
   if(!supa||!me)return;
   const email=dataKey();
@@ -687,7 +744,6 @@ async function pushCloud(){
       logo_sch:await idb.get('logo_sch')||null,
       _ts:Date.now()};
     curTs=payload._ts;
-    /* upsert — ئەگەر ڕیز بۆ ئەم ئیمەیڵە هەبوو نوێی دەکاتەوە، ئەگەر نەبوو دروستی دەکات */
     const{error}=await supa.from('pw_data')
       .upsert({email:email,payload:payload,updated_by:email,updated_at:new Date().toISOString()},
         {onConflict:'email'});
@@ -697,7 +753,6 @@ async function pushCloud(){
     document.getElementById('syncLbl').textContent='⚠ پاشەکەوتی ناوخۆیی (بێ ئینتەرنێت)';
   }
 }
-/* نوێکردنەوەی خۆکار — تەنها داتای هەمان ئیمەیڵ */
 setInterval(async()=>{
   if(!supa||!me||appMain.style.display==='none')return;
   try{
@@ -910,7 +965,6 @@ function getCtx(){
 }
 let soundLock=0;
 function beep(ok){
-  /* پاراستن لە دووبارەبوونەوە — هەر ٢٠٠ چرکە تەنها یەک دەنگ */
   const now=Date.now();
   if(now-soundLock<200)return;
   soundLock=now;
@@ -1112,7 +1166,7 @@ async function clearDays(){
   renderDays();renderExams();renderSup();renderDash();
   logAct('سڕینەوەی هەموو ڕۆژ و ڕێکەوتەکان');toast('هەموو ڕۆژ و ڕێکەوتەکان سڕدرانەوە','no')}
 
-/* ================= دیاریکردنی خشتە — چێک بۆکس بۆ یەک مامۆستا بۆ هەر ڕۆژێک ================= */
+/* ================= دیاریکردنی خشتە — چێک بۆکس بۆ هەمووان ئازاد ================= */
 function renderExams(){const t=document.getElementById('examTbl');
   if(!teachers.length||!days.length){
     t.innerHTML='<tr><td class="hint">'+
@@ -1128,15 +1182,8 @@ function renderExams(){const t=document.getElementById('examTbl');
     h+='</tr>'});
   h+='</tbody>';t.innerHTML=h}
 function togCheck(tid,did,v){
-  /* یاسای چێک بۆکس — بۆ هەر ڕۆژێک تەنها یەک مامۆستا */
+  /* چێک بۆکس بۆ هەموو مامۆستایان ئازادە — بێ سنوور */
   if(v){
-    /* پشکنین: ئایا مامۆستایەکی تر بۆ ئەم ڕۆژە چێک کراوە؟ */
-    const others=teachers.filter(x=>x.id!==tid&&checks[x.id+'|'+did]);
-    if(others.length){
-      toast('ناتوانرێت: مامۆستای «'+others[0].name+'» پێشتر بۆ ئەم ڕۆژە چێک کراوە — سەرەتا چێکی ئەو لابە','no');
-      renderExams();
-      return;
-    }
     checks[tid+'|'+did]=1;
     Object.keys(assign).forEach(k=>{
       if(k.startsWith(did+'|')){
@@ -1265,7 +1312,7 @@ async function clearViolations(){
   if(!ok)return;
   violations=[];save();renderViol();toast('تۆمارەکان سڕدرانەوە','no')}
 
-/* ================= تۆماری کردارەکان ================= */
+/* ================= تۆماری کردارەکان — بە سڕینەوە ================= */
 let logRows=[];
 async function loadLog(){
   if(!isOwner||!supa)return;
@@ -1286,6 +1333,16 @@ async function loadLog(){
     h+='<tr><td>'+fa(i+1)+'</td><td class="name">'+esc(r.actor||'—')+'</td>'+
        '<td class="name" style="text-align:right">'+esc(r.action||'—')+'</td><td>'+tm+'</td></tr>'});
   h+='</tbody>';t.innerHTML=h;
+}
+async function clearLog(){
+  if(!isOwner||!supa)return;
+  const ok=await confirmBox('ئایە ڕازیت بە سڕینەوەی هەموو تۆمارەکانی کردارەکان؟ ئەمە ناگەڕێتەوە');
+  if(!ok)return;
+  try{
+    await supa.from('pw_log').delete().neq('id',0);
+    logAct('سڕینەوەی هەموو تۆمارەکانی کردارەکان');
+    toast('هەموو تۆمارەکان سڕدرانەوە');loadLog();
+  }catch(e){toast('سڕینەوە سەرکەوتوو نەبوو','no')}
 }
 
 /* ================= چاپکردن ================= */

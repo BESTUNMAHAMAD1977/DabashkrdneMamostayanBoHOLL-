@@ -162,9 +162,11 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
 .pfoot{margin-top:10px;color:#111;page-break-inside:avoid;break-inside:avoid}
 .pmgr{font-weight:800;margin-bottom:6px}
 .pcards{display:flex;gap:8px;align-items:stretch}
-.pcard{flex:1;border:1.5px solid #333;border-radius:10px;padding:6px 8px;background:#fff}
+.pcard{flex:1;border:1.5px solid #333;border-radius:10px;padding:6px 8px;background:#fff;
+  display:flex;flex-direction:column}
 .pcard-t{font-weight:800;text-align:center;margin-bottom:4px;font-size:12px}
-.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px 10px;align-content:space-between}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px 10px;
+  align-content:space-between;flex:1}
 .pitem{display:flex;align-items:center;justify-content:space-between;gap:6px;
   font-size:11px;border-bottom:1px dotted #bbb;padding:1px 2px}
 .pitem .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -198,8 +200,12 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
   @page{size:A4 landscape;margin:8mm}
   body *{visibility:hidden}
   #printArea,#printArea *{visibility:visible}
-  #printArea{position:absolute;inset-inline-start:0;top:0;width:100%;padding:0;
-    box-shadow:none;border:none;background:#fff}
+  #printArea{position:absolute;inset-inline-start:0;top:0;width:100%;height:100vh;
+    display:flex;flex-direction:column;padding:0;box-shadow:none;border:none;background:#fff}
+  #printArea .pfoot{flex:1;display:flex;flex-direction:column}
+  #printArea .pcards{flex:1}
+  #printArea .pcard{display:flex;flex-direction:column}
+  #printArea .pgrid{flex:1}
   .noprint{display:none!important}
   .pfoot{page-break-inside:avoid;break-inside:avoid}
 }
@@ -322,7 +328,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
         <div class="card"><h2>ژمارەی مامۆستایان</h2><div class="big" id="cT">٠</div></div>
         <div class="card"><h2>ژمارەی هۆڵەکان</h2><div class="big" id="cH">٠</div></div>
         <div class="card"><h2>ڕۆژ و ڕێکەوتەکان</h2><div class="big" id="cD">٠</div></div>
-        <div class="card"><h2>دابراو لە خشتە</h2><div class="big" id="cP">٠</div></div>
+        <div class="card"><h2>دانراو لە خشتە</h2><div class="big" id="cP">٠</div></div>
       </div>
       <div class="card">
         <h2>تاقیکردنەوەی دەنگ و پەنجەرە</h2>
@@ -516,7 +522,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
           <button class="btn" onclick="doPrint()">🖨️ چاپکردن</button>
         </div>
         <p class="hint">سیستەم بە شێوەی زیرەکانە لاپەڕەکە گونجاند دەکات بۆ یەک لاپەڕەی A4 ئاسۆیی —
-        کارتەکانی ئامار خۆگونجاند دەکەن بۆ پڕکردنەوەی بۆشایی لاپەڕەکە.</p>
+        کارتەکانی ئامار خۆگونجاند دەکەن بۆ پڕکردنەوەی بۆشایی لاپەڕەکە و فۆنتی ناوەکان گەورە دەکرێن.</p>
       </div>
       <div class="card" id="printArea"></div>
     </section>
@@ -1073,13 +1079,12 @@ document.getElementById('themeBtn').onclick=()=>{
   localStorage.setItem('pwdark',dark?'1':'0')};
 if(localStorage.getItem('pwdark')==='1')document.documentElement.classList.add('dark');
 
-/* ================= دەنگ — چاککراو ================= */
+/* ================= دەنگ ================= */
 let audioCtx=null;
 function getCtx(){
   if(!audioCtx){
     try{audioCtx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}
   }
-  /* لە هەندێک وێبگەڕدا یەکەم دەنگ پێویستە بە کارلێکی بەکارهێنەر بێتەوە */
   if(audioCtx&&audioCtx.state==='suspended'){
     audioCtx.resume().catch(()=>{});
   }
@@ -1515,8 +1520,11 @@ function fitPrint(){
   const ph=pa.querySelector('.phead'),pf=pa.querySelector('.pfoot'),pt=pa.querySelector('.ptitlebar');
   [ph,pf,pt].forEach(x=>x&&x.classList.remove('compact'));
   /* پاککردنەوەی هەموو گونجاندنی پێشووی فووتەر */
-  const oldGrid=pa.querySelectorAll('.pgrid');
-  oldGrid.forEach(g=>{g.style.height='';g.style.display='';g.style.flexDirection='';g.style.justifyContent=''});
+  pa.querySelectorAll('.pgrid').forEach(g=>{
+    g.style.height='';g.style.display='';g.style.flexDirection='';g.style.justifyContent='';g.style.flexGrow=''});
+  pa.querySelectorAll('.pitem').forEach(r=>{r.style.fontSize=''});
+  pa.querySelectorAll('.pitem .nm').forEach(n=>{n.style.fontSize=''});
+  pa.querySelectorAll('.badge').forEach(b=>{b.style.minWidth='';b.style.height='';b.style.fontSize='';b.style.borderWidth=''});
   const avail=(210-16)*3.7795;
   const h=pa.scrollHeight;
   /* زووم بۆ گونجاندنی هەموو ناوەڕۆک */
@@ -1527,9 +1535,10 @@ function fitPrint(){
     if(h2>avail*.98){[ph,pf,pt].forEach(x=>x&&x.classList.add('compact'))}
   }
   /* بۆشایی ماوە لە خشتە بۆ کۆتایی لاپەڕە — کارتەکان پڕی دەکەنەوە */
-  requestAnimationFrame(()=>fitFooter());
+  requestAnimationFrame(()=>fitFooter(avail));
 }
-function fitFooter(){
+/* گونجاندنی زیرەکانی کارتەکانی فووتەر — پڕکردنەوەی لاپەڕە + فۆنتی گەورە */
+function fitFooter(avail){
   const pa=document.getElementById('printArea');
   const pf=pa.querySelector('.pfoot');
   if(!pf)return;
@@ -1538,22 +1547,33 @@ function fitFooter(){
   const rows=pf.querySelectorAll('.pitem');
   if(!rows.length)return;
   const z=parseFloat(pa.style.zoom||'1');
-  const phEl=pa.querySelector('.phead'),ptEl=pa.querySelector('.ptitlebar');
-  /* گەڕانەوە بۆ بەرزی سروشتی بۆ پێوانەی ڕاستەقینە */
-  grid.style.height='auto';grid.style.display='';grid.style.flexDirection='';grid.style.justifyContent='';
   const footTop=pf.offsetTop*z;
-  const headH=(phEl?phEl.offsetHeight*z:0)+(ptEl?ptEl.offsetHeight*z:0);
   const footH=pf.offsetHeight*z;
-  const avail=(210-16)*3.7795;
-  /* بۆشایی ماوە لە نێوان سەرەتای فووتەر و کۆتایی لاپەڕە */
-  let space=avail-(footTop+footH-avail*0)+avail-(headH+footH);
-  space=avail-(headH+footH);
-  if(space<40)return;
-  /* زیادکردنی بەرزایی بە شێوەی هاوسەنگ بۆ پڕکردنەوەی بۆشایی — تا ٤٠٪ ی بۆشاییەکە */
-  const extra=Math.min(space*.85,240);
+  /* بۆشایی ماوە لە کۆتایی فووتەر تا کۆتایی لاپەڕە */
+  let space=avail-(footTop+footH);
+  if(space<20)return;
+  /* بەرزایی زیادە بۆ هەر کارتێک — بۆشاییەکە بە ٩٥٪ پڕ بکە */
+  const extra=Math.min(space*.95,500);
+  /* فۆنتی ناوەکان گەورە بکە بەپێی بۆشایی — بەپێی ژمارەی خانەکان */
+  const baseFont=11;
+  const newFont=Math.min(baseFont+extra/40,22);
+  rows.forEach(r=>{
+    r.style.fontSize=newFont+'px';
+    const nm=r.querySelector('.nm');
+    if(nm)nm.style.fontSize=newFont+'px';
+  });
+  const badges=pf.querySelectorAll('.badge');
+  badges.forEach(b=>{
+    b.style.minWidth=(newFont+10)+'px';
+    b.style.height=(newFont+10)+'px';
+    b.style.fontSize=(newFont-1)+'px';
+    b.style.borderWidth='2.5px';
+  });
+  /* گرەکردنی هەموو شتێک بۆ پڕکردنەوەی بۆشایی */
   grid.style.display='flex';grid.style.flexDirection='column';
-  grid.style.height=(grid.offsetHeight+extra)+'px';
   grid.style.justifyContent='space-between';
+  grid.style.flexGrow='1';
+  grid.style.height='100%';
 }
 function buildPrint(){
   const c=LS.get(lsKey('pw_chk'),{min:true,sch:true});

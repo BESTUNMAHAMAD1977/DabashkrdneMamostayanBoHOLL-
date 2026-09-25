@@ -20,7 +20,6 @@ html.dark{
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);transition:background .3s,color .3s;font-family:var(--font)}
-/* ===== پەڕەی چوونەژوورەوە ===== */
 .authwrap{min-height:100vh;display:grid;place-items:center;padding:20px;position:relative;overflow:hidden;
   background:linear-gradient(135deg,#0e7490 0%,#06b6d4 50%,#0891b2 100%)}
 .authwrap::before,.authwrap::after{content:'';position:absolute;border-radius:50%;filter:blur(90px);opacity:.28}
@@ -62,14 +61,26 @@ body{margin:0;background:var(--bg);color:var(--ink);transition:background .3s,co
 .side{width:260px;flex-shrink:0;background:var(--panel);border-inline-start:1px solid var(--line);
   padding:16px 12px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px}
 .brand{display:flex;align-items:center;gap:10px;padding:4px 10px 14px}
-.mark{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex-shrink:0;
-  background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;font-size:22px;font-weight:800}
+/* ناونیشانی قوتابخانە لە چوارگۆشەکەدا */
+.mark{min-width:42px;max-width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;font-size:13px;font-weight:800;
+  line-height:1.25;padding:2px;text-align:center;overflow:hidden;word-break:break-word}
+.mark.big{min-width:42px}
 .brand small{color:var(--mut);line-height:1.6}
 .userbox{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:6px;font-size:12.5px}
-.userbox .em{font-weight:800;word-break:break-all}
 .userbox .role{display:inline-block;margin-top:6px;padding:3px 10px;border-radius:20px;font-size:11px;
   background:rgba(6,182,212,.15);color:var(--br);font-weight:700}
 .userbox .role.owner{background:rgba(22,163,74,.15);color:var(--ok)}
+/* دوگمەی نیشاندانی ئیمەیڵ */
+.emailrow{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:6px}
+.emailrow .emb{flex:1;cursor:pointer;font-size:12px;color:var(--mut);font-weight:700;
+  background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 8px;text-align:center;
+  transition:.3s;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.emailrow .emb:hover{border-color:var(--br2);color:var(--br)}
+.emailrow .emb.show{color:var(--ink)}
+.emailrow .eyeb{all:unset;cursor:pointer;font-size:14px;padding:5px 7px;border-radius:8px;
+  background:var(--bg);border:1px solid var(--line);transition:.3s;flex-shrink:0}
+.emailrow .eyeb:hover{border-color:var(--br2)}
 .nav{display:flex;flex-direction:column;gap:5px;flex:1;overflow-y:auto}
 .nav button{all:unset;display:flex;align-items:center;gap:9px;padding:10px 11px;border-radius:12px;
   cursor:pointer;color:var(--mut);font:inherit;font-size:14px;transition:.3s}
@@ -88,7 +99,6 @@ body{margin:0;background:var(--bg);color:var(--ink);transition:background .3s,co
 .view.on{display:block;animation:in .3s ease}
 @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
-/* ===== کارتەکان — نەرم و هێواش ===== */
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
   padding:18px;margin-bottom:14px;position:relative;
   transition:transform .45s ease,box-shadow .45s ease}
@@ -144,6 +154,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
 .psub{color:#555;font-size:13px;font-weight:400}
 .plogo{width:100px;text-align:center}
 .plogo img{max-width:95px;max-height:88px;display:block;margin:0 auto}
+.plogo.off{display:none}
 .ptitlebar{text-align:center;font-weight:800;font-size:17px;margin:8px 0;color:#111}
 .pfoot{margin-top:10px;color:#111;page-break-inside:avoid;break-inside:avoid}
 .pmgr{font-weight:800;margin-bottom:6px}
@@ -227,13 +238,18 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
 
 <div class="app" id="appMain" style="display:none">
   <aside class="side">
-    <div class="brand"><div class="mark">پ</div>
-      <div><b>پەروەردە ٢٠٢٦</b><br><small>سیستەمی دابەشکردنی مامۆستایان بۆ هۆڵەکانی تاقیکردنەوە</small></div>
+    <div class="brand">
+      <div class="mark" id="brandMark">پ</div>
+      <div><b id="brandName">پەروەردە ٢٠٢٦</b><br><small>سیستەمی دابەشکردنی مامۆستایان بۆ هۆڵەکانی تاقیکردنەوە</small></div>
     </div>
     <div class="userbox">
-      <div class="em" id="uEmail">—</div>
       <span class="role" id="uRole">—</span>
       <div style="margin-top:8px"><button class="btn ghost sm" onclick="doLogout()">🚪 دەرچوون</button></div>
+      <!-- نیشاندانی ئیمەیڵ بە دوگمەی ئارەزوومەندی -->
+      <div class="emailrow">
+        <div class="emb" id="uEmailMask" onclick="toggleEmail()" title="کلیک بکە بۆ نیشاندانی ئیمەیڵ">••••••••••</div>
+        <button class="eyeb" id="eyeEmail" onclick="toggleEmail()" title="نیشاندانی ئیمەیڵ">👁️</button>
+      </div>
     </div>
     <nav class="nav" id="nav"></nav>
     <div class="foot">فۆنتی پەروەردە ٢٠٢٦ — بەپێی پوختەی ڕێنووسی وەزارەتی پەروەردە</div>
@@ -293,7 +309,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
     <section class="view" id="v-info">
       <div class="card">
         <h2>فۆنتی پەروەردە ٢٠٢٦</h2>
-        <p>فایلی فۆنتەکە لە کۆمپیوتەرەکەت هەڵبژێرە — پاشەکەوت دەکرێت لە داتابەیسدا و بۆ هەموو بەکارهێنەران دەگەن.</p>
+        <p>فایلی فۆنتەکە لە کۆمپیوتەرەکەت هەڵبژێرە — خۆکارانە پاشەکەوت دەکرێت لە داتابەیسدا.</p>
         <label class="btn ghost file">بارکردنی فۆنت<input type="file" id="fontIn" accept=".ttf,.otf,.woff,.woff2"></label>
         <span class="st" id="fontState">هێشتا بار نەکراوە</span>
         <div style="margin-top:10px"><button class="btn ghost" onclick="delFont()">لابردنی فۆنت</button></div>
@@ -311,21 +327,21 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
       </div>
       <div class="card">
         <h2>لۆگۆکان — تەنها فۆرماتی پی ئێن جی</h2>
-        <p>لۆگۆکان بە ئاسانی بگۆڕە یان بسڕەوە — گۆڕانکارییەکان لە داتابەیسدا پاشەکەوت دەکرێن و بۆ هەموو بەکارهێنەران دەگەن.</p>
+        <p>کاتی چێککردنی «لە چاپکردندا دەربکەوێت»، لۆگۆکە ڕاستەوخۆ دەردەکەوێت لە سەرپەڕەی خشتەی چاپکردندا — و کاتی لابردنی چێکەکە، لادەبرێت.</p>
         <div class="logos">
           <div class="logoBox">
             <div class="ph" id="ph_min">لۆگۆی وەزارەتی پەروەردە</div>
             <img class="logo" id="img_min" hidden>
             <label class="btn ghost file">🔄 گۆڕینی وێنە<input type="file" id="up_min" accept="image/png"></label>
             <div class="row"><button class="btn ghost" onclick="delLogo('min')">🗑️ سڕینەوە</button>
-            <label class="chk"><input type="checkbox" id="chkMin" checked> لە چاپکردندا دەربکەوێت</label></div>
+            <label class="chk"><input type="checkbox" id="chkMin" onchange="logoChk('min',this.checked)"> لە چاپکردندا دەربکەوێت</label></div>
           </div>
           <div class="logoBox">
             <div class="ph" id="ph_sch">لۆگۆی قوتابخانە</div>
             <img class="logo" id="img_sch" hidden>
             <label class="btn ghost file">🔄 گۆڕینی وێنە<input type="file" id="up_sch" accept="image/png"></label>
             <div class="row"><button class="btn ghost" onclick="delLogo('sch')">🗑️ سڕینەوە</button>
-            <label class="chk"><input type="checkbox" id="chkSch" checked> لە چاپکردندا دەربکەوێت</label></div>
+            <label class="chk"><input type="checkbox" id="chkSch" onchange="logoChk('sch',this.checked)"> لە چاپکردندا دەربکەوێت</label></div>
           </div>
         </div>
       </div>
@@ -575,6 +591,7 @@ const uid=p=>p+Date.now().toString(36)+Math.floor(Math.random()*999);
 let teachers=[], halls=[], days=[], checks={}, assign={}, violations=[];
 let editT=null, editH=null;
 let logoMin='', logoSch='', NAMES={}, tsize=13, colored=false, curView='dash';
+let emailShown=false;
 
 /* ================= داتابەیس — Supabase ================= */
 const SUPA_URL='https://igvzbyjucwrjrrjwumrj.supabase.co';
@@ -621,6 +638,19 @@ function teacherSameHall(tc){let m=0,mh='';halls.forEach(hl=>{let n=0;days.forEa
 function timeNow(){const d=new Date();let h=d.getHours();const ap=h>=12?'PM':'AM';
   h=h%12;if(h===0)h=12;const p=n=>String(n).padStart(2,'0');
   return fa(p(h))+':'+fa(p(d.getMinutes()))+' '+ap}
+
+/* ================= نیشاندانی ئیمەیڵ بە ئارەزوومەندی ================= */
+function toggleEmail(){
+  if(!me)return;
+  emailShown=!emailShown;
+  const em=document.getElementById('uEmailMask');
+  if(emailShown){em.textContent=me.email;em.classList.add('show');
+    document.getElementById('eyeEmail').textContent='🙈';
+    em.title='کلیک بکە بۆ شاردنەوەی ئیمەیڵ'}
+  else{em.textContent='••••••••••';em.classList.remove('show');
+    document.getElementById('eyeEmail').textContent='👁️';
+    em.title='کلیک بکە بۆ نیشاندانی ئیمەیڵ'}
+}
 
 /* ================= چوونەژوورەوە ================= */
 const authScreen=document.getElementById('authScreen'),appMain=document.getElementById('appMain');
@@ -679,7 +709,6 @@ if(supa){
 
 async function startApp(){
   authScreen.style.display='none';appMain.style.display='';
-  document.getElementById('uEmail').textContent=me.email;
   try{
     const{data:prof}=await supa.from('pw_profiles').select('role').eq('id',me.id).maybeSingle();
     isOwner=prof?.role==='owner';
@@ -861,6 +890,16 @@ async function delLogo(key){
   if(key==='owner'&&a)a.hidden=true;
   logAct('سڕینەوەی وێنە');toast('وێنە سڕدرایەوە','no');buildPrint()}
 
+/* ================= چێک بۆکسی لۆگۆ — گەڕانەوەی ڕاستەوخۆ بۆ سەرپەڕە ================= */
+function logoChk(key,checked){
+  const c=LS.get(lsKey('pw_chk'),{min:true,sch:true});
+  if(key==='min')c.min=checked;else c.sch=checked;
+  LS.set(lsKey('pw_chk'),c);
+  /* نوێکردنەوەی ڕاستەوخۆی سەرپەڕەی چاپکردن */
+  buildPrint();
+  toast(checked?'لۆگۆکە لە چاپکردندا چالاک کرا':'لۆگۆکە لە چاپکردندا لابرا');
+}
+
 /* ================= بەشی دەربارە ================= */
 function renderAbout(){
   const a=ABOUT||{...ABOUT_DEF};
@@ -973,7 +1012,6 @@ function beep(ok){
     o.connect(g);g.connect(c.destination);
     o.type='sine';
     if(ok){
-      /* دەنگی نەرمی سەرکەوتن — دوو تۆنی کورت و نەرم */
       o.frequency.setValueAtTime(520,c.currentTime);
       o.frequency.setValueAtTime(700,c.currentTime+.1);
       g.gain.setValueAtTime(0,c.currentTime);
@@ -987,6 +1025,23 @@ function beep(ok){
       g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.3);
       o.start();o.stop(c.currentTime+.32);
     }
+  }catch(e){}
+}
+function beepSoftOk(){
+  const now=Date.now();
+  if(now-soundLock<200)return;
+  soundLock=now;
+  const c=getCtx();if(!c)return;
+  try{
+    const o=c.createOscillator(),g=c.createGain();
+    o.connect(g);g.connect(c.destination);
+    o.type='sine';
+    o.frequency.setValueAtTime(660,c.currentTime);
+    o.frequency.setValueAtTime(880,c.currentTime+.08);
+    g.gain.setValueAtTime(0,c.currentTime);
+    g.gain.linearRampToValueAtTime(.08,c.currentTime+.03);
+    g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.25);
+    o.start();o.stop(c.currentTime+.27);
   }catch(e){}
 }
 function toast(msg,kind){
@@ -1175,7 +1230,7 @@ async function clearDays(){
   renderDays();renderExams();renderSup();renderDash();
   logAct('سڕینەوەی هەموو ڕۆژ و ڕێکەوتەکان');toast('هەموو ڕۆژ و ڕێکەوتەکان سڕدرانەوە','no')}
 
-/* ================= دیاریکردنی خشتە — چێک بۆکس بۆ هەمووان ئازاد + دەنگی نەرم ================= */
+/* ================= دیاریکردنی خشتە ================= */
 function renderExams(){const t=document.getElementById('examTbl');
   if(!teachers.length||!days.length){
     t.innerHTML='<tr><td class="hint">'+
@@ -1193,7 +1248,6 @@ function renderExams(){const t=document.getElementById('examTbl');
 function togCheck(tid,did,v){
   if(v){
     checks[tid+'|'+did]=1;
-    /* دەنگی نەرمی سەرکەوتن بۆ هەڵبژاردنی چێک بۆکس */
     beepSoftOk();
     Object.keys(assign).forEach(k=>{
       if(k.startsWith(did+'|')){
@@ -1205,6 +1259,10 @@ function togCheck(tid,did,v){
     delete checks[tid+'|'+did];
   }
   save();renderExams();renderSup();renderDash()}
+async function clearChecks(){if(!Object.keys(checks).length){toast('هەڵبژاردنێک نییە','no');return}
+  const ok=await confirmBox('ئایە ڕازیت بە سڕینەوەی هەموو چێک بۆکسەکان؟');
+  if(!ok)return;checks={};save();renderExams();
+  logAct('سڕینەوەی هەموو چێک بۆکسەکان');toast('هەڵبژاردنەکان سڕدرانەوە','no')}
 
 /* ================= دابەشکردنی خۆکار ================= */
 const R1='نەبوونی مامۆستای ئازاد بۆ پڕکردنەوەی خانە — شکاندنی یاسای دوو باری بەدوای یەکدا لە هەمان هۆڵدا';
@@ -1317,7 +1375,7 @@ async function clearViolations(){
   if(!ok)return;
   violations=[];save();renderViol();toast('تۆمارەکان سڕدرانەوە','no')}
 
-/* ================= تۆماری کردارەکان — سڕینەوەی ڕیز بە ڕیز ================= */
+/* ================= تۆماری کردارەکان ================= */
 let logRows=[];
 async function loadLog(){
   if(!isOwner||!supa)return;
@@ -1344,7 +1402,6 @@ async function clearLog(){
   const ok=await confirmBox('ئایە ڕازیت بە سڕینەوەی هەموو تۆمارەکانی کردارەکان؟ — داتای مامۆستایان و گۆڕانکارییەکانی بەکارهێنەرانی تر دەمێننەوە');
   if(!ok)return;
   try{
-    /* سڕینەوەی ڕیز بە ڕیز — بەپێی سیستەمی RLS */
     const{data:all}=await supa.from('pw_log').select('id');
     if(all&&all.length){
       for(const r of all){
@@ -1379,14 +1436,14 @@ function fitPrint(){
 function buildPrint(){
   const c=LS.get(lsKey('pw_chk'),{min:true,sch:true});
   let h='<div class="phead">';
-  h+='<div class="plogo">'+(c.min&&logoMin?'<img src="'+logoMin+'">':'')+'</div>';
+  h+='<div class="plogo '+(c.min&&logoMin?'':'off')+'">'+(c.min&&logoMin?'<img src="'+logoMin+'">':'')+'</div>';
   h+='<div class="ptitle">';
-  h+='<div class="pbig">بەڕێوەبەرایەتی گشتی پەیروەردەی '+(esc(NAMES.gen)||'.......')+'</div>';
+  h+='<div class="pbig">بەڕێوەبەرایەتی گشتی پەروەردەی '+(esc(NAMES.gen)||'.......')+'</div>';
   h+='<div>بەڕێوەبەرایەتی پەروەردەی '+(esc(NAMES.dir)||'.......')+'</div>';
   h+='<div>قوتابخانەی '+(esc(NAMES.sch)||'.......')+'</div>';
   h+='<div class="psub">ساڵی خوێندن: '+(esc(NAMES.year)||'.......')+'</div>';
   h+='</div>';
-  h+='<div class="plogo">'+(c.sch&&logoSch?'<img src="'+logoSch+'">':'')+'</div></div>';
+  h+='<div class="plogo '+(c.sch&&logoSch?'':'off')+'">'+(c.sch&&logoSch?'<img src="'+logoSch+'">':'')+'</div></div>';
   h+='<div class="ptitlebar">خشتەی دابەشکردنی مامۆستایان</div>';
   if(!halls.length||!days.length){h+='<p style="text-align:center">پێویستە هۆڵ و ڕۆژ و ڕێکەوت هەبن بۆ چاپکردنی خشتە</p>'}
   else{
@@ -1522,25 +1579,6 @@ async function wipeAll(){
   logAct('سفرکردنەوەی سیستەم');
   toast('سیستەم سفر کرایەوە');setTimeout(()=>location.reload(),700)}
 
-/* ================= دەنگی نەرم بۆ چێک بۆکس ================= */
-function beepSoftOk(){
-  const now=Date.now();
-  if(now-soundLock<200)return;
-  soundLock=now;
-  const c=getCtx();if(!c)return;
-  try{
-    const o=c.createOscillator(),g=c.createGain();
-    o.connect(g);g.connect(c.destination);
-    o.type='sine';
-    o.frequency.setValueAtTime(660,c.currentTime);
-    o.frequency.setValueAtTime(880,c.currentTime+.08);
-    g.gain.setValueAtTime(0,c.currentTime);
-    g.gain.linearRampToValueAtTime(.08,c.currentTime+.03);
-    g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.25);
-    o.start();o.stop(c.currentTime+.27);
-  }catch(e){}
-}
-
 /* ================= هێنانەوە لە دەستپێکدا ================= */
 function bootApp(){
   try{
@@ -1550,9 +1588,17 @@ function bootApp(){
     const lo=idb.get('logo_owner');lo&&lo.then(x=>{if(x)showLogo('owner',x)});
   }catch(e){}
   loadLocal();
-  loadNames();initDaySelects();renderDash();buildPrint();
+  loadNames();initDaySelects();renderDash();buildPrint();updateBrand();
   document.getElementById('syncLbl').textContent=supa?'✓ پەیوەست بە داتابەیس':'⚠ دۆخی ناوخۆیی';
 }
+/* نوێکردنەوەی ناوی قوتابخانە لە سلاید داشبۆرد */
+function updateBrand(){
+  const sch=NAMES.sch||'پ';
+  const mark=document.getElementById('brandMark');
+  mark.textContent=sch;
+  mark.style.fontSize=sch.length>3?'10px':(sch.length>1?'13px':'22px');
+}
+
 (async()=>{
   try{
     const f=await idb.get('font');if(f)await applyFont(f);
@@ -1560,7 +1606,7 @@ function bootApp(){
     const ls=await idb.get('logo_sch');if(ls){logoSch=ls;showLogo('sch',ls)}
     const lo=await idb.get('logo_owner');if(lo)showLogo('owner',lo);
   }catch(e){}
-  loadNames();initDaySelects();renderDash();buildPrint();
+  loadNames();initDaySelects();renderDash();buildPrint();updateBrand();
 })();
 </script>
 </body>

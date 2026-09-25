@@ -165,8 +165,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
 .pcard{flex:1;border:1.5px solid #333;border-radius:10px;padding:6px 8px;background:#fff;
   display:flex;flex-direction:column}
 .pcard-t{font-weight:800;text-align:center;margin-bottom:4px;font-size:12px}
-.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px 10px;
-  align-content:space-between;flex:1}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px 10px;flex:1}
 .pitem{display:flex;align-items:center;justify-content:space-between;gap:6px;
   font-size:11px;border-bottom:1px dotted #bbb;padding:1px 2px}
 .pitem .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -527,7 +526,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--br);cursor:pointe
           <button class="btn" onclick="doPrint()">🖨️ چاپکردن</button>
         </div>
         <p class="hint">سیستەم بە شێوەی زیرەکانە لاپەڕەکە گونجاند دەکات بۆ یەک لاپەڕەی A4 ئاسۆیی —
-        کارتەکانی ئامار خۆگونجاند دەکەن بۆ پڕکردنەوەی بۆشایی لاپەڕەکە و دەتوانیت فۆنتی ناوەکان بە دەستی گەورە و بچووک بکەیت.</p>
+        کارتەکانی ئامار لە خوارەوەی خشتە دادەڕێژرێن وەک ڕاستەقینە و دەتوانیت فۆنتی ناوەکانیان بە دەستی گەورە و بچووک بکەیت.</p>
       </div>
       <div class="card" id="printArea"></div>
     </section>
@@ -1514,7 +1513,7 @@ async function clearLog(){
   }catch(e){toast('سڕینەوە سەرکەوتوو نەبوو — پۆلیسی سڕینەوە لە داتابەیسدا زیاد بکە','no')}
 }
 
-/* ================= چاپکردن — گونجاندنی زیرەکانی فووتەر ================= */
+/* ================= چاپکردن — وەک پێشوو + گۆڕینی ئەندازەی کارتەکان ================= */
 function toggleColor(){colored=!colored;buildPrint();
   document.getElementById('colorBtn').style.fontWeight=colored?'800':'700';
   toast(colored?'ڕەنگکردن چالاک کرا':'ڕەنگکردن ناچالاک کرا')}
@@ -1524,68 +1523,54 @@ function fSize(d){tsize=Math.max(9,Math.min(22,tsize+d));
 function iSize(d){
   itemScale=Math.max(0.7,Math.min(2.2,itemScale+d*0.1));
   document.getElementById('itemLbl').textContent='ئەندازەی کارت: '+fa(itemScale.toFixed(1))+'×';
-  buildPrint();
+  /* تەنها فۆنتی ناو و ژمارەکان نوێ دەکرێنەوە — جێگاکانیان ناگۆڕدرێن */
+  const pa=document.getElementById('printArea');
+  const rows=pa.querySelectorAll('.pitem');
+  rows.forEach(r=>{
+    const base=parseFloat(getComputedStyle(r).getPropertyValue('--base-fs'))||11;
+    const nm=r.querySelector('.nm');
+    if(nm)nm.style.fontSize=(base*itemScale)+'px';
+  });
+  const badges=pa.querySelectorAll('.badge');
+  badges.forEach(b=>{
+    const bs=parseFloat(getComputedStyle(b).getPropertyValue('--base-bs'))||11;
+    b.style.minWidth=(bs*itemScale+10)+'px';
+    b.style.height=(bs*itemScale+10)+'px';
+    b.style.fontSize=(bs*itemScale-1)+'px';
+  });
 }
 function fitPrint(){
   const pa=document.getElementById('printArea');
   pa.style.zoom='';
   const ph=pa.querySelector('.phead'),pf=pa.querySelector('.pfoot'),pt=pa.querySelector('.ptitlebar');
   [ph,pf,pt].forEach(x=>x&&x.classList.remove('compact'));
-  /* پاککردنەوەی هەموو گونجاندنی پێشووی فووتەر */
-  pa.querySelectorAll('.pgrid').forEach(g=>{
-    g.style.height='';g.style.display='';g.style.flexDirection='';g.style.justifyContent='';g.style.flexGrow=''});
-  pa.querySelectorAll('.pitem').forEach(r=>{r.style.fontSize=''});
-  pa.querySelectorAll('.pitem .nm').forEach(n=>{n.style.fontSize=''});
-  pa.querySelectorAll('.badge').forEach(b=>{b.style.minWidth='';b.style.height='';b.style.fontSize='';b.style.borderWidth=''});
   const avail=(210-16)*3.7795;
   const h=pa.scrollHeight;
-  /* زووم بۆ گونجاندنی هەموو ناوەڕۆک */
   if(h>avail){
     const z=Math.max(0.3,avail/h);
     pa.style.zoom=z;
     const h2=pa.scrollHeight;
     if(h2>avail*.98){[ph,pf,pt].forEach(x=>x&&x.classList.add('compact'))}
   }
-  /* بۆشایی ماوە لە خشتە بۆ کۆتایی لاپەڕە — کارتەکان پڕی دەکەنەوە */
-  requestAnimationFrame(()=>fitFooter(avail));
+  /* دوای گونجاندن — ئەندازەی دەستکردی کارتەکان جێبەجێ بکە */
+  requestAnimationFrame(()=>applyItemScale());
 }
-/* گونجاندنی زیرەکانی کارتەکانی فووتەر — پڕکردنەوەی لاپەڕە + فۆنتی گەورە */
-function fitFooter(avail){
+function applyItemScale(){
   const pa=document.getElementById('printArea');
-  const pf=pa.querySelector('.pfoot');
-  if(!pf)return;
-  const grid=pf.querySelector('.pgrid');
-  if(!grid)return;
-  const rows=pf.querySelectorAll('.pitem');
-  if(!rows.length)return;
-  const z=parseFloat(pa.style.zoom||'1');
-  const footTop=pf.offsetTop*z;
-  const footH=pf.offsetHeight*z;
-  /* بۆشایی ماوە لە کۆتایی فووتەر تا کۆتایی لاپەڕە */
-  const space=avail-(footTop+footH);
-  if(space<20)return;
-  /* بەرزایی زیادە بۆ هەر کارتێک — بۆشاییەکە بە ٩٥٪ پڕ بکە */
-  const extra=Math.min(space*.95,500);
-  /* فۆنتی ناوەکان گەورە بکە بەپێی بۆشایی + ئەندازەی دەستکردی بەکارهێنەر */
-  const baseFont=11;
-  const newFont=Math.min((baseFont+extra/40)*itemScale,32);
-  rows.forEach(r=>{
-    r.style.fontSize=newFont+'px';
+  pa.querySelectorAll('.pitem').forEach(r=>{
+    const base=parseFloat(r.dataset.bfs)||11;
+    r.style.setProperty('--base-fs',base);
     const nm=r.querySelector('.nm');
-    if(nm)nm.style.fontSize=newFont+'px';
+    if(nm)nm.style.fontSize=(base*itemScale)+'px';
   });
-  const badges=pf.querySelectorAll('.badge');
-  badges.forEach(b=>{
-    b.style.minWidth=(newFont+10)+'px';
-    b.style.height=(newFont+10)+'px';
-    b.style.fontSize=(newFont-1)+'px';
-    b.style.borderWidth='2.5px';
+  pa.querySelectorAll('.badge').forEach(b=>{
+    const bs=parseFloat(b.dataset.bbs)||11;
+    b.dataset.bbs=bs;
+    b.style.setProperty('--base-bs',bs);
+    b.style.minWidth=(bs*itemScale+10)+'px';
+    b.style.height=(bs*itemScale+10)+'px';
+    b.style.fontSize=(bs*itemScale-1)+'px';
   });
-  /* گرەکردنی هەموو شتێک بۆ پڕکردنەوەی بۆشایی */
-  grid.style.display='flex';grid.style.flexDirection='column';
-  grid.style.justifyContent='space-between';
-  grid.style.flexGrow='1';
-  grid.style.height='100%';
 }
 function buildPrint(){
   const c=LS.get(lsKey('pw_chk'),{min:true,sch:true});
@@ -1624,15 +1609,15 @@ function buildPrint(){
     h+='<div class="pcard"><div class="pcard-t">ژمارەی ڕۆژانی چاودێری هەر مامۆستایەک بەپێی ڕۆژانی ناو خشتەکە</div>';
     h+='<div class="pgrid" style="grid-template-columns:repeat('+cols+',1fr)">';
     teachers.forEach(tc=>{
-      h+='<div class="pitem"><span class="nm">'+esc(tc.name)+'</span>'+
-         '<span class="badge">'+fa(teacherDayCount(tc))+'</span></div>'});
+      h+='<div class="pitem" data-bfs="11"><span class="nm">'+esc(tc.name)+'</span>'+
+         '<span class="badge" data-bbs="11">'+fa(teacherDayCount(tc))+'</span></div>'});
     h+='</div></div>';
     h+='<div class="pcard"><div class="pcard-t">ژمارەی ڕۆژانی هەمان هۆڵ بۆ هەر مامۆستایەک لەهەموو ڕۆژەکان</div>';
     h+='<div class="pgrid" style="grid-template-columns:repeat('+cols+',1fr)">';
     teachers.forEach(tc=>{
       const sh=teacherSameHall(tc);
-      h+='<div class="pitem"><span class="nm">'+esc(tc.name)+(sh.count?' — '+esc(sh.hall):'')+'</span>'+
-         '<span class="badge">'+fa(sh.count)+'</span></div>'});
+      h+='<div class="pitem" data-bfs="11"><span class="nm">'+esc(tc.name)+(sh.count?' — '+esc(sh.hall):'')+'</span>'+
+         '<span class="badge" data-bbs="11">'+fa(sh.count)+'</span></div>'});
     h+='</div></div>';
     h+='</div>';
   }else h+='<p style="text-align:center">هیچ مامۆستایەک نییە بۆ کارتەکانی ئامار</p>';
